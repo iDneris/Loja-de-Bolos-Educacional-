@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<!-- A&L Cakes - Meus Dados -->
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Meus Dados - A&L Cakes</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+
+    .info-conta {
+      margin-top: 1rem;
+      padding: 1rem 1.2rem;
+
+      background: rgba(255,255,255,0.7);
+
+      border: 1px solid rgba(217, 122, 163, 0.15);
+
+      border-radius: 14px;
+
+      color: var(--texto-claro);
+
+      font-size: 0.95rem;
+    }
+
+    .acoes-conta {
+      display: flex;
+      gap: 1rem;
+
+      margin-top: 2rem;
+    }
+
+.acoes-conta {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 2rem;
+}
+
+.acoes-conta button {
+  flex: 1;
+
+  border: none;
+  border-radius: 50px;
+
+  padding: 0.95rem 1rem;
+
+  font-size: 0.92rem;
+  font-weight: 600;
+  font-family: var(--fonte-texto);
+
+  cursor: pointer;
+  transition: var(--transicao);
+}
+
+/* BOTAO SALVAR */
+.btn-salvar-conta {
+  background: var(--rosa-suave);
+  color: white;
+}
+
+.btn-salvar-conta:hover {
+  background: var(--rosa-medio);
+  transform: translateY(-2px);
+  color: #b8194d;
+}
+
+/* BOTAO EXCLUIR */
+.btn-excluir-conta {
+  background: rgba(248, 200, 220, 0.25);
+
+  color: #c47d97;
+
+  border: 1px solid #e6b9c9;
+
+  backdrop-filter: blur(8px);
+}
+
+.btn-excluir-conta:hover {
+  background: #fdd6d6;
+  color: #a33;
+  transform: translateY(-2px);
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+  .acoes-conta {
+    flex-direction: column;
+  }
+}
+
+    @media (max-width: 768px) {
+
+      .acoes-conta {
+        flex-direction: column;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- CONTEUDO -->
+  <main>
+
+    <div class="form-container">
+
+      <h2>Meus Dados</h2>
+
+      <p class="subtitulo">
+        Visualize e altere suas informacoes de cadastro.
+      </p>
+
+      <form id="form-meus-dados">
+
+        <div class="campo">
+
+          <label for="nome">
+            Nome completo
+          </label>
+
+          <input type="text"
+            id="nome"
+            placeholder="Carregando...">
+
+        </div>
+
+        <div class="campo">
+
+          <label for="email">
+            Email
+          </label>
+
+          <input type="email"
+            id="email"
+            placeholder="Carregando...">
+
+        </div>
+
+        <div class="campo">
+
+          <label for="telefone">
+            Telefone
+          </label>
+
+          <input type="tel"
+            id="telefone"
+            placeholder="Carregando...">
+
+        </div>
+
+        <div class="info-conta" id="info-criacao">
+
+          Conta criada em:
+          <strong>Carregando...</strong>
+
+        </div>
+
+        <div class="acoes-conta">
+
+          <button type="submit" class="btn-salvar-conta">
+            Salvar Alteracoes
+          </button>
+
+          <button type="button" class="btn-excluir-conta" id="btn-excluir-conta">
+            Excluir Conta
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </main>
+
+  <!-- RODAPE -->
+  <footer class="rodape">
+
+    <div class="copyright">
+      &copy; 2026 A&L Cakes. Todos os direitos reservados. Projeto academico.
+    </div>
+
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="../assets/js/controller.js"></script>
+  <script src="../assets/js/header.js"></script>
+  <script>
+    let usuarioId = null;
+
+    $(document).ready(function() {
+      carregarDados();
+
+      $('#form-meus-dados').on('submit', async function(e) {
+        e.preventDefault();
+        await salvarDados();
+      });
+
+      $('#btn-excluir-conta').on('click', async function() {
+        await excluirConta();
+      });
+    });
+
+    async function carregarDados() {
+      try {
+        const usuario = await apiCall('/auth/me', 'GET', null, true);
+        usuarioId = usuario.id;
+        $('#nome').val(usuario.nome);
+        $('#email').val(usuario.email);
+        $('#telefone').val(usuario.telefone);
+        const dataCriacao = new Date(usuario.criado_em).toLocaleDateString('pt-BR');
+        $('#info-criacao').html('Conta criada em: <strong>' + dataCriacao + '</strong>');
+      } catch (error) {
+        Swal.fire('Erro', 'Faca login para acessar seus dados.', 'error');
+      }
+    }
+
+    async function salvarDados() {
+      try {
+        const dados = {
+          nome: $('#nome').val(),
+          email: $('#email').val(),
+          telefone: $('#telefone').val()
+        };
+        await apiCall('/usuarios/' + usuarioId, 'PUT', dados, true);
+        Swal.fire('Sucesso', 'Dados atualizados com sucesso!', 'success');
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao salvar: ' + error.message, 'error');
+      }
+    }
+
+    async function excluirConta() {
+      const result = await Swal.fire({
+        title: 'Tem certeza?',
+        text: 'Esta acao nao pode ser desfeita!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, excluir',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (!result.isConfirmed) return;
+
+      try {
+        await apiCall('/usuarios/' + usuarioId, 'DELETE', null, true);
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        Swal.fire('Sucesso', 'Conta excluida com sucesso.', 'success');
+        window.location.href = '../index.html';
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao excluir: ' + error.message, 'error');
+      }
+    }
+  </script>
+
+</body>
+</html>

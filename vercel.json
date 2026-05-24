@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/src/servidor.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "backend/public/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/index.html",
+      "dest": "/backend/public/index.html"
+    },
+    {
+      "src": "/testeEndpoints.html",
+      "dest": "/backend/public/testeEndpoints.html"
+    },
+    {
+      "src": "/api-docs/(.*)",
+      "dest": "backend/src/servidor.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "backend/src/servidor.ts"
+    }
+  ],
+  "outputDirectory": "backend/dist"
+}

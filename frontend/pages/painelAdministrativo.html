@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<!-- A&L Cakes - Painel Administrativo -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Administrativo - A&L Cakes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    .painel-container {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    .menu-lateral {
+      width: 260px;
+      background: var(--rosa-escuro);
+      color: white;
+      padding: 2rem 1rem;
+      position: fixed;
+      top: 70px;
+      left: 0;
+      height: calc(100vh - 70px);
+      overflow-y: auto;
+    }
+    
+    .menu-lateral .logo {
+      color: white;
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      display: block;
+    }
+    
+    .menu-lateral .logo span {
+      color: var(--rosa-claro);
+    }
+    
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+    }
+    
+    .menu-item:hover,
+    .menu-item.ativo {
+      background: rgba(255,255,255,0.15);
+    }
+    
+    .menu-item .icone {
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+    
+    .menu-item .icone svg {
+      fill: white !important;
+    }
+    
+    .conteudo-painel {
+      margin-left: 260px;
+      flex: 1;
+      padding: 2rem;
+      padding-top: 90px;
+      background: var(--bege);
+      min-height: 100vh;
+    }
+    
+    .titulo-secao {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--texto-escuro);
+    }
+    
+    .modulo {
+      display: none;
+    }
+    
+    .modulo.ativo {
+      display: block;
+    }
+    
+    /* Cards estatísticas */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    /* Gráficos */
+    .graficos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .grafico-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .grafico-card h4 {
+      font-size: 1rem;
+      color: var(--texto-claro);
+      margin-bottom: 1rem;
+    }
+    
+    .grafico-container {
+      position: relative;
+      height: 250px;
+    }
+    
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .stat-card h4 {
+      font-size: 0.9rem;
+      color: var(--texto-claro);
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-card .valor {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--rosa-escuro);
+    }
+    
+    /* Tabela */
+    .tabela-container {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    
+    .tabela-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--cinza-borda);
+    }
+    
+    .tabela-header h3 {
+      font-size: 1.2rem;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      vertical-align: middle !important;
+    }
+    
+    th {
+      background: var(--bege);
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: var(--texto-claro);
+    }
+    
+    td {
+      border-bottom: 1px solid var(--cinza-borda);
+      height: 70px;
+    }
+    
+    tr {
+      height: 70px;
+    }
+    
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+    
+    tr:hover td {
+      background: var(--bege);
+    }
+    
+    .badge {
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .badge-admin {
+      background: var(--rosa-claro);
+      color: var(--rosa-escuro);
+    }
+    
+    .badge-cliente {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+    
+    .acoes {
+      gap: 0.5rem;
+    }
+    
+    .btn-acao {
+      padding: 0.4rem 0.6rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.3s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    
+    .btn-editar {
+      background: var(--bege);
+      color: var(--texto-escuro);
+    }
+    
+    .btn-excluir {
+      background: #ffebee;
+      color: #c62828;
+    }
+    
+    .btn-novo {
+      background: var(--rosa-escuro);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 24px;
+      width: 90%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid var(--cinza-borda);
+      border-radius: 10px;
+      font-family: var(--fonte-texto);
+    }
+    
+    .botoes-modal {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+      .menu-lateral {
+        width: 100%;
+        position: relative;
+        height: auto;
+      }
+      
+      .conteudo-painel {
+        margin-left: 0;
+      }
+      
+      .painel-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header será carregado dinamicamente via header.js -->
+
+  <div class="painel-container">
+    <!-- MENU LATERAL -->
+    <aside class="menu-lateral">
+      <a href="../index.html" class="logo">A&L<span> Cakes</span></a>
+      
+      <div class="menu-item ativo" data-modulo="dashboard">
+        <span class="icone">📊</span>
+        <span>Dashboard</span>
+      </div>
+      
+      <div class="menu-item" data-modulo="produtos">
+        <span class="icone">📦</span>
+        <span>Gerenciar Produtos</span>
+      </div>
+      
+      <div class="menu-item" data-modulo="clientes">
+        <span class="icone">👥</span>
+        <span>Gerenciar Clientes</span>
+      </div>
+      
+      <div class="menu-item" data-modulo="equipe">
+        <span class="icone">👨‍💼</span>
+        <span>Gerenciar Equipe</span>
+      </div>
+      
+      <div class="menu-item" data-modulo="whatsapp">
+        <span class="icone"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.13 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></span>
+        <span>Configurar WhatsApp</span>
+      </div>
+      
+      <div class="menu-item" onclick="logout()">
+        <span class="icone">🚪</span>
+        <span>Sair</span>
+      </div>
+      
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="conteudo-painel">
+      
+      <!-- DASHBOARD -->
+      <div id="modulo-dashboard" class="modulo ativo">
+        <h1 class="titulo-secao">Dashboard</h1>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h4>Total de Produtos</h4>
+            <div class="valor" id="stat-produtos">-</div>
+          </div>
+          <div class="stat-card">
+            <h4>Total de Clientes</h4>
+            <div class="valor" id="stat-clientes">-</div>
+          </div>
+          <div class="stat-card">
+            <h4>Membros da Equipe</h4>
+            <div class="valor" id="stat-equipe">-</div>
+          </div>
+          <div class="stat-card">
+            <h4>Pedidos Hoje</h4>
+            <div class="valor" id="stat-pedidos">-</div>
+          </div>
+        </div>
+        
+        <!-- GRÁFICOS -->
+        <div class="graficos-grid">
+          <div class="grafico-card">
+            <h4>📊 Vendas por Categoria</h4>
+            <div class="grafico-container">
+              <canvas id="grafico-categorias"></canvas>
+            </div>
+          </div>
+          
+          <div class="grafico-card">
+            <h4>📈 Vendas da Semana</h4>
+            <div class="grafico-container">
+              <canvas id="grafico-semana"></canvas>
+            </div>
+          </div>
+          
+          <div class="grafico-card">
+            <h4>🎯 Status dos Pedidos</h4>
+            <div class="grafico-container">
+              <canvas id="grafico-status"></canvas>
+            </div>
+          </div>
+          
+          <div class="grafico-card">
+            <h4>👥 Top Clientes</h4>
+            <div class="grafico-container">
+              <canvas id="grafico-clientes"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUTOS -->
+      <div id="modulo-produtos" class="modulo">
+        <h1 class="titulo-secao">Gerenciar Produtos</h1>
+        
+        <div class="tabela-container">
+          <div class="tabela-header">
+            <h3>📦 Lista de Produtos</h3>
+            <button class="btn-novo" onclick="abrirModalProduto()">
+              <span>+</span> Novo Produto
+            </button>
+          </div>
+          
+          <table>
+            <thead>
+              <tr>
+                <th>Imagem</th>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-produtos">
+              <tr><td colspan="4" style="text-align:center;">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CLIENTES -->
+      <div id="modulo-clientes" class="modulo">
+        <h1 class="titulo-secao">Gerenciar Clientes</h1>
+        
+        <div class="tabela-container">
+          <div class="tabela-header">
+            <h3>👥 Lista de Clientes</h3>
+            <button class="btn-novo" onclick="abrirModalCliente()">
+              <span>+</span> Novo Cliente
+            </button>
+          </div>
+          
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Desde</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-clientes">
+              <tr><td colspan="5" style="text-align:center;">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- EQUIPE -->
+      <div id="modulo-equipe" class="modulo">
+        <h1 class="titulo-secao">Gerenciar Equipe</h1>
+        
+        <div class="tabela-container">
+          <div class="tabela-header">
+            <h3>👨‍💼 Administradores e Colaboradores</h3>
+            <button class="btn-novo" onclick="abrirModalEquipe()">
+              <span>+</span> Novo Membro
+            </button>
+          </div>
+          
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Cargo</th>
+                <th>Telefone</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-equipe">
+              <tr><td colspan="5" style="text-align:center;">Carregando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- WHATSAPP -->
+      <div id="modulo-whatsapp" class="modulo">
+        <h1 class="titulo-secao">Configurar WhatsApp</h1>
+        
+        <div class="graficos-grid" style="grid-template-columns: 1fr 1fr;">
+          <!-- Configurações -->
+          <div class="grafico-card">
+            <h3>💬 Configurações</h3>
+            
+            <form id="form-whatsapp" style="margin-top: 1rem;">
+              <div class="form-group">
+                <label>Número do WhatsApp</label>
+                <input type="text" id="whatsapp-numero" placeholder="5511999999999" required>
+                <small style="color: var(--texto-claro);">Formato: 55 + DDD + número</small>
+              </div>
+              
+              <div class="form-group">
+                <label>Template de Mensagem</label>
+                <select id="whatsapp-template-select" style="width:100%; padding:0.75rem 1rem; border:1.5px solid var(--cinza-borda); border-radius:10px; margin-bottom:0.5rem;">
+                  <option value="">Selecione um template...</option>
+                  <option value="padrao">📝 Padrão (Completo)</option>
+                  <option value="simples">✨ Simples (Direto)</option>
+                  <option value="formal">👔 Formal (Empresarial)</option>
+                  <option value="descontraido">😊 Descontraído</option>
+                  <option value="encomenda">🎂 Pedido de Encomenda</option>
+                  <option value="custom">✏️ Personalizado (Editar)</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label>Conteúdo da Mensagem</label>
+                <textarea id="whatsapp-template" rows="10" required></textarea>
+                <small style="color: var(--texto-claro);">
+                  Variáveis: <code>{PRODUTOS}</code> = itens, <code>{TOTAL}</code> = valor, <code>{DATA}</code> = data atual
+                </small>
+              </div>
+              
+              <button type="submit" class="btn-novo">Salvar Configuração</button>
+            </form>
+          </div>
+          
+          <!-- Preview -->
+          <div class="grafico-card">
+            <h3>👁️ Preview da Mensagem</h3>
+            
+            <div id="whatsapp-preview" style="background: #f0f0f0; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-family: monospace; white-space: pre-wrap; min-height: 200px; max-height: 400px; overflow-y: auto;">
+              Carregando preview...
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+              <h4>📱 Teste com Carrinho</h4>
+              <button class="btn-novo" onclick="testarMensagemCarrinho()" style="width: 100%;">
+                Gerar Link do Carrinho
+              </button>
+              <div id="whatsapp-link-teste" style="margin-top: 1rem; word-break: break-all; font-size: 0.85rem;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MODAL PRODUTO -->
+  <div id="modal-produto" class="modal">
+    <div class="modal-content">
+      <h2 id="modal-titulo">Novo Produto</h2>
+      
+      <form id="form-produto">
+        <div class="form-group">
+          <label>Nome do Produto</label>
+          <input type="text" id="produto-nome" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Descrição</label>
+          <textarea id="produto-descricao" rows="3" required></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>Preço (R$)</label>
+          <input type="number" id="produto-preco" step="0.01" required>
+        </div>
+        
+        <div class="form-group">
+          <label>URL da Imagem</label>
+          <input type="url" id="produto-imagem" required>
+        </div>
+        
+        <div class="botoes-modal">
+          <button type="button" class="btn-acao btn-editar" onclick="fecharModal()">Cancelar</button>
+          <button type="submit" class="btn-novo">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL CLIENTE -->
+  <div id="modal-cliente" class="modal">
+    <div class="modal-content">
+      <h2 id="modal-titulo-cliente">Novo Cliente</h2>
+      
+      <form id="form-cliente">
+        <div class="form-group">
+          <label>Nome Completo</label>
+          <input type="text" id="cliente-nome" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="cliente-email" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Telefone</label>
+          <input type="tel" id="cliente-telefone" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" id="cliente-senha" minlength="6" required>
+        </div>
+        
+        <div class="botoes-modal">
+          <button type="button" class="btn-acao btn-editar" onclick="fecharModalCliente()">Cancelar</button>
+          <button type="submit" class="btn-novo">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL EQUIPE -->
+  <div id="modal-equipe" class="modal">
+    <div class="modal-content">
+      <h2 id="modal-titulo-equipe">Novo Membro da Equipe</h2>
+      
+      <form id="form-equipe">
+        <div class="form-group">
+          <label>Nome Completo</label>
+          <input type="text" id="equipe-nome" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="equipe-email" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Telefone</label>
+          <input type="tel" id="equipe-telefone" required>
+        </div>
+        
+        <div class="form-group">
+          <label>Cargo</label>
+          <select id="equipe-role" style="width:100%;padding:0.75rem 1rem;border:1.5px solid var(--cinza-borda);border-radius:10px;font-family:var(--fonte-texto);">
+            <option value="admin">Administrador</option>
+            <option value="colaborador">Colaborador</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Senha</label>
+          <input type="password" id="equipe-senha" minlength="6" required>
+        </div>
+        
+        <div class="botoes-modal">
+          <button type="button" class="btn-acao btn-editar" onclick="fecharModalEquipe()">Cancelar</button>
+          <button type="submit" class="btn-novo">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../assets/js/controller.js"></script>
+  <script src="../assets/js/header.js"></script>
+  <script>
+    // Navegação entre módulos
+    $('.menu-item[data-modulo]').on('click', function() {
+      const modulo = $(this).data('modulo');
+      
+      $('.menu-item').removeClass('ativo');
+      $(this).addClass('ativo');
+      
+      $('.modulo').removeClass('ativo');
+      $(`#modulo-${modulo}`).addClass('ativo');
+      
+      // Carregar dados do módulo
+      if (modulo === 'produtos') carregarProdutos();
+      if (modulo === 'clientes') carregarClientes();
+      if (modulo === 'equipe') carregarEquipe();
+      if (modulo === 'whatsapp') carregarConfigWhatsApp();
+      if (modulo === 'dashboard') carregarDashboard();
+    });
+
+    // Dashboard
+    let graficos = {};
+    
+    async function carregarDashboard() {
+      try {
+        const [produtos, usuarios, pedidos] = await Promise.all([
+          apiCall('/bolos', 'GET'),
+          apiCall('/usuarios', 'GET', null, true),
+          apiCall('/pedidos', 'GET', null, true).catch(() => [])
+        ]);
+        
+        const clientes = usuarios.filter(u => u.role === 'cliente');
+        const equipe = usuarios.filter(u => u.role === 'admin' || u.role === 'colaborador');
+        
+        $('#stat-produtos').text(produtos.length);
+        $('#stat-clientes').text(clientes.length);
+        $('#stat-equipe').text(equipe.length);
+        $('#stat-pedidos').text(pedidos.length || 0);
+        
+        // Carregar gráficos
+        carregarGraficos(pedidos, produtos, clientes);
+      } catch (error) {
+        console.error('Erro ao carregar dashboard:', error);
+      }
+    }
+    
+    function carregarGraficos(pedidos, produtos, clientes) {
+      // Destruir gráficos anteriores
+      Object.values(graficos).forEach(g => g?.destroy?.());
+      
+      // Cores do tema
+      const cores = ['#d97aa3', '#f8c8dc', '#6b4c5c', '#e8b4b8', '#c97aa3'];
+      
+      // 1. Gráfico de Vendas por Categoria (Donut)
+      const ctxCategorias = document.getElementById('grafico-categorias');
+      if (ctxCategorias) {
+        graficos.categorias = new Chart(ctxCategorias, {
+          type: 'doughnut',
+          data: {
+            labels: produtos.slice(0, 5).map(p => p.nome),
+            datasets: [{
+              data: produtos.slice(0, 5).map(() => Math.floor(Math.random() * 50) + 10),
+              backgroundColor: cores,
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom' }
+            }
+          }
+        });
+      }
+      
+      // 2. Gráfico de Vendas da Semana (Barras)
+      const ctxSemana = document.getElementById('grafico-semana');
+      if (ctxSemana) {
+        graficos.semana = new Chart(ctxSemana, {
+          type: 'bar',
+          data: {
+            labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            datasets: [{
+              label: 'Vendas (R$)',
+              data: [1200, 1900, 800, 2200, 2800, 3500, 1500],
+              backgroundColor: '#d97aa3',
+              borderRadius: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      }
+      
+      // 3. Gráfico de Status dos Pedidos (Donut)
+      const ctxStatus = document.getElementById('grafico-status');
+      if (ctxStatus) {
+        graficos.status = new Chart(ctxStatus, {
+          type: 'doughnut',
+          data: {
+            labels: ['Pendentes', 'Concluídos', 'Cancelados'],
+            datasets: [{
+              data: [15, 45, 5],
+              backgroundColor: ['#f8c8dc', '#d97aa3', '#e8b4b8'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom' }
+            }
+          }
+        });
+      }
+      
+      // 4. Gráfico de Top Clientes (Barras Horizontais)
+      const ctxClientes = document.getElementById('grafico-clientes');
+      if (ctxClientes && clientes.length > 0) {
+        graficos.clientes = new Chart(ctxClientes, {
+          type: 'bar',
+          data: {
+            labels: clientes.slice(0, 5).map(c => c.nome.split(' ')[0]),
+            datasets: [{
+              label: 'Pedidos',
+              data: clientes.slice(0, 5).map(() => Math.floor(Math.random() * 20) + 1),
+              backgroundColor: '#6b4c5c',
+              borderRadius: 8
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }
+            },
+            scales: {
+              x: { beginAtZero: true }
+            }
+          }
+        });
+      }
+    }
+
+    // Produtos
+    let modoEdicao = false;
+    let idEdicao = null;
+
+    async function carregarProdutos() {
+      try {
+        const produtos = await apiCall('/bolos', 'GET');
+        
+        $('#tabela-produtos').html(produtos.map(p => {
+          return `
+            <tr>
+              <td><img src="${p.imagem}" alt="${p.nome}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;"></td>
+              <td>${p.nome}</td>
+              <td>R$ ${p.preco.toFixed(2).replace('.', ',')}</td>
+              <td class="acoes">
+                <button class="btn-acao btn-editar" onclick="editarProduto('${p.id}')">✏️</button>
+                <button class="btn-acao btn-excluir" onclick="excluirProduto('${p.id}')">🗑️</button>
+              </td>
+            </tr>
+          `;
+        }).join(''));
+      } catch (error) {
+        $('#tabela-produtos').html('<tr><td colspan="4" style="text-align:center;color:red;">Erro ao carregar</td></tr>');
+      }
+    }
+
+    function abrirModalProduto() {
+      modoEdicao = false;
+      idEdicao = null;
+      $('#modal-titulo').text('Novo Produto');
+      $('#form-produto')[0].reset();
+      $('#modal-produto').addClass('show');
+    }
+
+    function fecharModal() {
+      $('#modal-produto').removeClass('show');
+    }
+
+    async function editarProduto(id) {
+      try {
+        const produto = await apiCall(`/bolos/${id}`, 'GET');
+        modoEdicao = true;
+        idEdicao = id;
+        
+        $('#modal-titulo').text('Editar Produto');
+        $('#produto-nome').val(produto.nome);
+        $('#produto-descricao').val(produto.descricao);
+        $('#produto-preco').val(produto.preco);
+        $('#produto-imagem').val(produto.imagem);
+        
+        $('#modal-produto').addClass('show');
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao carregar produto', 'error');
+      }
+    }
+
+    async function excluirProduto(id) {
+      const result = await Swal.fire({
+        title: 'Confirmar exclusão?',
+        text: 'Esta ação não pode ser desfeita!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, excluir',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (!result.isConfirmed) return;
+
+      try {
+        await apiCall(`/bolos/${id}`, 'DELETE', null, true);
+        Swal.fire('Sucesso', 'Produto excluído!', 'success');
+        carregarProdutos();
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao excluir produto', 'error');
+      }
+    }
+
+    $('#form-produto').on('submit', async function(e) {
+      e.preventDefault();
+      
+      const dados = {
+        nome: $('#produto-nome').val(),
+        descricao: $('#produto-descricao').val(),
+        preco: parseFloat($('#produto-preco').val()),
+        imagem: $('#produto-imagem').val()
+      };
+      
+      try {
+        if (modoEdicao && idEdicao) {
+          await apiCall(`/bolos/${idEdicao}`, 'PUT', dados, true);
+          Swal.fire('Sucesso', 'Produto atualizado!', 'success');
+        } else {
+          await apiCall('/bolos', 'POST', dados, true);
+          Swal.fire('Sucesso', 'Produto cadastrado!', 'success');
+        }
+        
+        fecharModal();
+        carregarProdutos();
+        carregarDashboard();
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao salvar produto', 'error');
+      }
+    });
+
+    // CLIENTES - CRUD Completo
+    let modoEdicaoCliente = false;
+    let idEdicaoCliente = null;
+
+    async function carregarClientes() {
+      try {
+        const usuarios = await apiCall('/usuarios', 'GET', null, true);
+        const clientes = usuarios.filter(u => u.role === 'cliente');
+        
+        $('#tabela-clientes').html(clientes.map(u => {
+          const data = new Date(u.criado_em).toLocaleDateString('pt-BR');
+          return `
+            <tr>
+              <td>${u.nome}</td>
+              <td>${u.email}</td>
+              <td>${u.telefone || '-'}</td>
+              <td>${data}</td>
+              <td class="acoes">
+                <button class="btn-acao btn-editar" onclick="editarCliente('${u.id}')">✏️</button>
+                <button class="btn-acao btn-excluir" onclick="excluirCliente('${u.id}')">🗑️</button>
+              </td>
+            </tr>
+          `;
+        }).join(''));
+      } catch (error) {
+        $('#tabela-clientes').html('<tr><td colspan="5" style="text-align:center;color:red;">Erro ao carregar</td></tr>');
+      }
+    }
+
+    function abrirModalCliente() {
+      modoEdicaoCliente = false;
+      idEdicaoCliente = null;
+      $('#modal-titulo-cliente').text('Novo Cliente');
+      $('#form-cliente')[0].reset();
+      $('#modal-cliente').addClass('show');
+    }
+
+    function fecharModalCliente() {
+      $('#modal-cliente').removeClass('show');
+    }
+
+    async function editarCliente(id) {
+      try {
+        const usuario = await apiCall(`/usuarios/${id}`, 'GET', null, true);
+        modoEdicaoCliente = true;
+        idEdicaoCliente = id;
+        
+        $('#modal-titulo-cliente').text('Editar Cliente');
+        $('#cliente-nome').val(usuario.nome);
+        $('#cliente-email').val(usuario.email);
+        $('#cliente-telefone').val(usuario.telefone);
+        $('#cliente-senha').prop('required', false);
+        
+        $('#modal-cliente').addClass('show');
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao carregar cliente', 'error');
+      }
+    }
+
+    async function excluirCliente(id) {
+      const result = await Swal.fire({
+        title: 'Confirmar exclusão?',
+        text: 'Esta ação não pode ser desfeita!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, excluir',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (!result.isConfirmed) return;
+
+      try {
+        await apiCall(`/usuarios/${id}`, 'DELETE', null, true);
+        Swal.fire('Sucesso', 'Cliente excluído!', 'success');
+        carregarClientes();
+        carregarDashboard();
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao excluir cliente', 'error');
+      }
+    }
+
+    $('#form-cliente').on('submit', async function(e) {
+      e.preventDefault();
+      
+      const dados = {
+        nome: $('#cliente-nome').val(),
+        email: $('#cliente-email').val(),
+        telefone: $('#cliente-telefone').val(),
+        role: 'cliente'
+      };
+      
+      const senha = $('#cliente-senha').val();
+      if (senha) dados.senha = senha;
+      
+      try {
+        if (modoEdicaoCliente && idEdicaoCliente) {
+          const usuarioAtualizado = await apiCall(`/usuarios/${idEdicaoCliente}`, 'PUT', dados, true);
+          Swal.fire('Sucesso', 'Cliente atualizado!', 'success');
+          
+          // Se for o usuário logado, atualizar localStorage
+          const usuarioLogado = JSON.parse(localStorage.getItem('usuario'));
+          if (usuarioLogado && usuarioLogado.id === idEdicaoCliente) {
+            localStorage.setItem('usuario', JSON.stringify({...usuarioLogado, ...dados}));
+            atualizarUsuario();
+          }
+        } else {
+          await apiCall('/auth/registrar', 'POST', dados);
+          Swal.fire('Sucesso', 'Cliente cadastrado!', 'success');
+        }
+        
+        fecharModalCliente();
+        carregarClientes();
+        carregarDashboard();
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao salvar cliente', 'error');
+      }
+    });
+
+    // EQUIPE - CRUD Completo
+    let modoEdicaoEquipe = false;
+    let idEdicaoEquipe = null;
+
+    async function carregarEquipe() {
+      try {
+        const usuarios = await apiCall('/usuarios', 'GET', null, true);
+        const equipe = usuarios.filter(u => u.role === 'admin' || u.role === 'colaborador');
+        
+        $('#tabela-equipe').html(equipe.map(u => {
+          const badgeClass = u.role === 'admin' ? 'badge-admin' : 'badge-cliente';
+          const roleText = u.role === 'admin' ? 'Administrador' : 'Colaborador';
+          return `
+            <tr>
+              <td>${u.nome}</td>
+              <td>${u.email}</td>
+              <td><span class="badge ${badgeClass}">${roleText}</span></td>
+              <td>${u.telefone || '-'}</td>
+              <td class="acoes">
+                <button class="btn-acao btn-editar" onclick="editarEquipe('${u.id}')">✏️</button>
+                <button class="btn-acao btn-excluir" onclick="excluirEquipe('${u.id}')">🗑️</button>
+              </td>
+            </tr>
+          `;
+        }).join(''));
+      } catch (error) {
+        $('#tabela-equipe').html('<tr><td colspan="5" style="text-align:center;color:red;">Erro ao carregar</td></tr>');
+      }
+    }
+
+    function abrirModalEquipe() {
+      modoEdicaoEquipe = false;
+      idEdicaoEquipe = null;
+      $('#modal-titulo-equipe').text('Novo Membro da Equipe');
+      $('#form-equipe')[0].reset();
+      $('#equipe-senha').prop('required', true);
+      $('#modal-equipe').addClass('show');
+    }
+
+    function fecharModalEquipe() {
+      $('#modal-equipe').removeClass('show');
+    }
+
+    async function editarEquipe(id) {
+      try {
+        const usuario = await apiCall(`/usuarios/${id}`, 'GET', null, true);
+        modoEdicaoEquipe = true;
+        idEdicaoEquipe = id;
+        
+        $('#modal-titulo-equipe').text('Editar Membro');
+        $('#equipe-nome').val(usuario.nome);
+        $('#equipe-email').val(usuario.email);
+        $('#equipe-telefone').val(usuario.telefone);
+        $('#equipe-role').val(usuario.role);
+        $('#equipe-senha').prop('required', false);
+        
+        $('#modal-equipe').addClass('show');
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao carregar membro', 'error');
+      }
+    }
+
+    async function excluirEquipe(id) {
+      const result = await Swal.fire({
+        title: 'Confirmar exclusão?',
+        text: 'Esta ação não pode ser desfeita!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim, excluir',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (!result.isConfirmed) return;
+
+      try {
+        await apiCall(`/usuarios/${id}`, 'DELETE', null, true);
+        Swal.fire('Sucesso', 'Membro excluído!', 'success');
+        carregarEquipe();
+        carregarDashboard();
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao excluir membro', 'error');
+      }
+    }
+
+    $('#form-equipe').on('submit', async function(e) {
+      e.preventDefault();
+      
+      const dados = {
+        nome: $('#equipe-nome').val(),
+        email: $('#equipe-email').val(),
+        telefone: $('#equipe-telefone').val(),
+        role: $('#equipe-role').val()
+      };
+      
+      const senha = $('#equipe-senha').val();
+      if (senha) dados.senha = senha;
+      
+      try {
+        if (modoEdicaoEquipe && idEdicaoEquipe) {
+          await apiCall(`/usuarios/${idEdicaoEquipe}`, 'PUT', dados, true);
+          Swal.fire('Sucesso', 'Membro atualizado!', 'success');
+          
+          // Se for o usuário logado, atualizar localStorage
+          const usuarioLogado = JSON.parse(localStorage.getItem('usuario'));
+          if (usuarioLogado && usuarioLogado.id === idEdicaoEquipe) {
+            localStorage.setItem('usuario', JSON.stringify({...usuarioLogado, ...dados}));
+            atualizarUsuario();
+          }
+        } else {
+          await apiCall('/auth/registrar', 'POST', dados);
+          Swal.fire('Sucesso', 'Membro cadastrado!', 'success');
+        }
+        
+        fecharModalEquipe();
+        carregarEquipe();
+        carregarDashboard();
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao salvar membro', 'error');
+      }
+    });
+
+    // WhatsApp Configuração
+    const templatesWhatsApp = {
+      padrao: `Olá A&L Cakes! 🎂
+
+Gostaria de fazer um pedido:
+
+{PRODUTOS}
+
+💰 Total: R$ {TOTAL}
+📅 Data: {DATA}
+
+Aguardo confirmação do pedido!
+Obrigado! 😊`,
+
+      simples: `Pedido A&L Cakes:
+
+{PRODUTOS}
+Total: R$ {TOTAL}
+
+Confirmar?`,
+
+      formal: `Prezados,
+
+Solicito orçamento para o seguinte pedido:
+
+{PRODUTOS}
+
+Valor Total: R$ {TOTAL}
+Data de Entrega: {DATA}
+
+Aguardo retorno.
+Atenciosamente.`,
+
+      descontraido: `Oi gente! Tudo bem? 💕
+
+Quero encomendar:
+
+{PRODUTOS}
+
+Totalzinho: R$ {TOTAL}
+
+Me avisem quando puder confirmar, tá? 
+Beijos! ✨`,
+
+      encomenda: `🎂 PEDIDO DE ENCOMENDA 🎂
+
+Cliente: {DATA}
+
+Itens:
+{PRODUTOS}
+
+💵 Total: R$ {TOTAL}
+
+Observações:
+- Data de entrega: a combinar
+- Retirada ou delivery
+
+Por favor, confirmar disponibilidade e prazo.
+Obrigado! 🙏`
+    };
+
+    async function carregarConfigWhatsApp() {
+      try {
+        const config = await apiCall('/whatsapp/config', 'GET');
+        $('#whatsapp-numero').val(config.numero);
+        $('#whatsapp-template').val(config.mensagemTemplate);
+        $('#whatsapp-preview').text(config.mensagemTemplate);
+        $('#whatsapp-template-select').val('custom');
+      } catch (error) {
+        console.error('Erro ao carregar config WhatsApp:', error);
+      }
+    }
+
+    // Selecionar template
+    $('#whatsapp-template-select').on('change', function() {
+      const template = $(this).val();
+      if (template && template !== 'custom') {
+        $('#whatsapp-template').val(templatesWhatsApp[template]);
+        $('#whatsapp-preview').text(templatesWhatsApp[template]);
+      }
+    });
+
+    $('#form-whatsapp').on('submit', async function(e) {
+      e.preventDefault();
+      
+      const dados = {
+        numero: $('#whatsapp-numero').val(),
+        mensagemTemplate: $('#whatsapp-template').val()
+      };
+      
+      try {
+        await apiCall('/whatsapp/config', 'PUT', dados, true);
+        Swal.fire('Sucesso', 'Configuração salva!', 'success');
+        carregarConfigWhatsApp();
+      } catch (error) {
+        Swal.fire('Erro', 'Erro ao salvar configuração', 'error');
+      }
+    });
+
+    // Preview em tempo real
+    $('#whatsapp-template').on('input', function() {
+      $('#whatsapp-preview').text($(this).val());
+    });
+
+    // Testar mensagem do carrinho
+    async function testarMensagemCarrinho() {
+      try {
+        const resultado = await apiCall('/whatsapp/mensagem/carrinho', 'GET', null, true);
+        
+        if (resultado.url) {
+          $('#whatsapp-link-teste').html(`
+            <a href="${resultado.url}" target="_blank" style="color: var(--rosa-escuro); text-decoration: underline;">
+              👆 Clique para abrir no WhatsApp
+            </a>
+          `);
+          $('#whatsapp-preview').text(resultado.preview);
+        } else {
+          $('#whatsapp-link-teste').text('⚠️ ' + resultado.preview);
+        }
+      } catch (error) {
+        $('#whatsapp-link-teste').text('❌ Erro ao gerar mensagem');
+      }
+    }
+
+    // Logout
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      window.location.href = 'login.html';
+    }
+
+    // Inicializar
+    $(document).ready(function() {
+      carregarDashboard();
+    });
+
+    // Fechar modal ao clicar fora
+    $(document).on('click', '.modal', function(e) {
+      if (e.target === this) {
+        if ($(this).attr('id') === 'modal-produto') fecharModal();
+        if ($(this).attr('id') === 'modal-cliente') fecharModalCliente();
+        if ($(this).attr('id') === 'modal-equipe') fecharModalEquipe();
+      }
+    });
+  </script>
+
+</body>
+</html>

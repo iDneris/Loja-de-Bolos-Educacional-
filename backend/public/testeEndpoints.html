@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Loja de Bolos - Teste Completo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .auth-section {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ffc107;
+        }
+        .auth-section h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        .token-display {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            word-break: break-all;
+            margin-top: 10px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section-title {
+            color: #764ba2;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .method {
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: white;
+        }
+        .method.get { background: #28a745; }
+        .method.post { background: #007bff; }
+        .method.put { background: #ffc107; color: #333; }
+        .method.delete { background: #dc3545; }
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #333;
+            font-weight: bold;
+        }
+        .protected-badge {
+            background: #ffc107;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .endpoint-description {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .test-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .test-button:active {
+            transform: translateY(0);
+        }
+        .response {
+            margin-top: 15px;
+            padding: 15px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+        .response.show {
+            display: block;
+        }
+        .response pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: 'Courier New', monospace;
+        }
+        .input-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>API Loja de Bolos - Teste Completo</h1>
+        <p class="subtitle">Teste todos os endpoints da API em produção</p>
+
+        <!-- AUTH SECTION -->
+        <div class="auth-section">
+            <h3>Autenticação (Token JWT)</h3>
+            <p>Faça login primeiro para testar endpoints protegidos</p>
+            <div class="grid">
+                <div>
+                    <strong>Admin:</strong> admin@loja.com / admin123
+                </div>
+                <div>
+                    <strong>Cliente:</strong> joao@email.com / cliente123
+                </div>
+            </div>
+            <div class="token-display" id="token-display">Token aparecerá aqui após login</div>
+        </div>
+
+        <!-- AUTENTICAÇÃO -->
+        <div class="section">
+            <h2 class="section-title">1. Autenticação</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/auth/registro</span>
+                </div>
+                <p class="endpoint-description">Registrar novo usuário</p>
+                <div class="input-group">
+                    <label>JSON Body:</label>
+                    <textarea id="registro-body">{"nome":"Teste User","email":"teste@email.com","senha":"senha123","telefone":"11999999999"}</textarea>
+                </div>
+                <button class="test-button" onclick="registro()">Registrar</button>
+                <div class="response" id="response-registro"></div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/auth/login</span>
+                </div>
+                <p class="endpoint-description">Fazer login e obter token JWT</p>
+                <div class="grid">
+                    <div class="input-group">
+                        <label>Email:</label>
+                        <input type="text" id="login-email" value="admin@loja.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Senha:</label>
+                        <input type="password" id="login-senha" value="admin123">
+                    </div>
+                </div>
+                <button class="test-button" onclick="login()">Login</button>
+                <div class="response" id="response-login"></div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/auth/me</span>
+                    <span class="protected-badge">Protegido</span>
+                </div>
+                <p class="endpoint-description">Ver dados do usuário logado</p>
+                <button class="test-button" onclick="me()">Ver Perfil</button>
+                <div class="response" id="response-me"></div>
+            </div>
+        </div>
+
+        <!-- BOLOS -->
+        <div class="section">
+            <h2 class="section-title">2. Bolos</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/bolos</span>
+                </div>
+                <p class="endpoint-description">Listar todos os bolos</p>
+                <button class="test-button" onclick="listarBolos()">Listar Bolos</button>
+                <div class="response" id="response-bolos"></div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/bolos/:id</span>
+                </div>
+                <p class="endpoint-description">Buscar bolo por ID</p>
+                <div class="input-group">
+                    <label>ID do Bolo:</label>
+                    <input type="text" id="bolo-id" placeholder="Cole o ID aqui">
+                </div>
+                <button class="test-button" onclick="buscarBolo()">Buscar</button>
+                <div class="response" id="response-bolo-id"></div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/bolos</span>
+                    <span class="protected-badge">Admin</span>
+                </div>
+                <p class="endpoint-description">Criar novo bolo</p>
+                <div class="input-group">
+                    <label>JSON Body:</label>
+                    <textarea id="criar-bolo-body">{"nome":"Bolo Teste","descricao":"Bolo de teste","preco":50.00,"imagem":"https://via.placeholder.com/300","estoque":10}</textarea>
+                </div>
+                <button class="test-button" onclick="criarBolo()">Criar Bolo</button>
+                <div class="response" id="response-criar-bolo"></div>
+            </div>
+        </div>
+
+        <!-- CARRINHO -->
+        <div class="section">
+            <h2 class="section-title">3. Carrinho</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/carrinho</span>
+                    <span class="protected-badge">Protegido</span>
+                </div>
+                <p class="endpoint-description">Ver carrinho do usuário</p>
+                <button class="test-button" onclick="verCarrinho()">Ver Carrinho</button>
+                <div class="response" id="response-carrinho"></div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/carrinho/adicionar</span>
+                    <span class="protected-badge">Protegido</span>
+                </div>
+                <p class="endpoint-description">Adicionar item ao carrinho</p>
+                <div class="grid">
+                    <div class="input-group">
+                        <label>ID do Bolo:</label>
+                        <input type="text" id="carrinho-bolo-id" placeholder="Cole o ID">
+                    </div>
+                    <div class="input-group">
+                        <label>Quantidade:</label>
+                        <input type="number" id="carrinho-quantidade" value="2" min="1">
+                    </div>
+                </div>
+                <button class="test-button" onclick="adicionarCarrinho()">Adicionar</button>
+                <div class="response" id="response-adicionar-carrinho"></div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method delete">DELETE</span>
+                    <span class="endpoint-path">/carrinho/limpar</span>
+                    <span class="protected-badge">Protegido</span>
+                </div>
+                <p class="endpoint-description">Limpar carrinho</p>
+                <button class="test-button" onclick="limparCarrinho()">Limpar Carrinho</button>
+                <div class="response" id="response-limpar-carrinho"></div>
+            </div>
+        </div>
+
+        <!-- PEDIDOS -->
+        <div class="section">
+            <h2 class="section-title">4. Pedidos</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="endpoint-path">/pedidos/criar</span>
+                    <span class="protected-badge">Protegido</span>
+                </div>
+                <p class="endpoint-description">Criar pedido do carrinho</p>
+                <div class="grid">
+                    <div class="input-group">
+                        <label>Nome do Cliente:</label>
+                        <input type="text" id="pedido-nome" value="João Silva">
+                    </div>
+                    <div class="input-group">
+                        <label>Telefone:</label>
+                        <input type="text" id="pedido-telefone" value="11987654321">
+                    </div>
+                </div>
+                <button class="test-button" onclick="criarPedido()">Criar Pedido</button>
+                <div class="response" id="response-criar-pedido"></div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/pedidos</span>
+                    <span class="protected-badge">Protegido</span>
+                </div>
+                <p class="endpoint-description">Listar pedidos do usuário</p>
+                <button class="test-button" onclick="listarPedidos()">Listar Pedidos</button>
+                <div class="response" id="response-pedidos"></div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/pedidos/:id/whatsapp</span>
+                    <span class="protected-badge">Protegido</span>
+                </div>
+                <p class="endpoint-description">Gerar mensagem WhatsApp</p>
+                <div class="input-group">
+                    <label>ID do Pedido:</label>
+                    <input type="text" id="whatsapp-pedido-id" placeholder="Cole o ID">
+                </div>
+                <button class="test-button" onclick="gerarWhatsApp()">Gerar Mensagem</button>
+                <div class="response" id="response-whatsapp"></div>
+            </div>
+        </div>
+
+        <!-- USUÁRIOS -->
+        <div class="section">
+            <h2 class="section-title">5. Usuários (Admin)</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/usuarios</span>
+                    <span class="protected-badge">Admin</span>
+                </div>
+                <p class="endpoint-description">Listar todos os usuários</p>
+                <button class="test-button" onclick="listarUsuarios()">Listar Usuários</button>
+                <div class="response" id="response-usuarios"></div>
+            </div>
+        </div>
+
+        <!-- TESTE -->
+        <div class="section">
+            <h2 class="section-title">6. Teste de Sistema</h2>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="endpoint-path">/teste/conexao</span>
+                </div>
+                <p class="endpoint-description">Testar conexão com Supabase</p>
+                <button class="test-button" onclick="testConexao()">Testar Conexão</button>
+                <div class="response" id="response-conexao"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://loja-de-bolos-educacional.vercel.app';
+        let token = '';
+
+        function showResponse(elementId, data, status) {
+            const element = document.getElementById(elementId);
+            element.classList.add('show');
+            const statusBadge = status >= 200 && status < 300 
+                ? '<span class="status-badge status-success">✓ ' + status + '</span>'
+                : '<span class="status-badge status-error">✗ ' + status + '</span>';
+            element.innerHTML = statusBadge + '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        }
+
+        function showError(elementId, error) {
+            const element = document.getElementById(elementId);
+            element.classList.add('show');
+            element.innerHTML = '<span class="status-badge status-error">✗ Erro</span><pre>' + error + '</pre>';
+        }
+
+        async function registro() {
+            try {
+                const body = JSON.parse(document.getElementById('registro-body').value);
+                const response = await fetch(`${API_URL}/auth/registro`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await response.json();
+                if (data.token) {
+                    token = data.token;
+                    document.getElementById('token-display').textContent = token;
+                }
+                showResponse('response-registro', data, response.status);
+            } catch (error) {
+                showError('response-registro', error.message);
+            }
+        }
+
+        async function login() {
+            try {
+                const email = document.getElementById('login-email').value;
+                const senha = document.getElementById('login-senha').value;
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
+                const data = await response.json();
+                if (data.token) {
+                    token = data.token;
+                    document.getElementById('token-display').textContent = token;
+                }
+                showResponse('response-login', data, response.status);
+            } catch (error) {
+                showError('response-login', error.message);
+            }
+        }
+
+        async function me() {
+            try {
+                const response = await fetch(`${API_URL}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                showResponse('response-me', data, response.status);
+            } catch (error) {
+                showError('response-me', error.message);
+            }
+        }
+
+        async function listarBolos() {
+            try {
+                const response = await fetch(`${API_URL}/bolos`);
+                const data = await response.json();
+                showResponse('response-bolos', data, response.status);
+            } catch (error) {
+                showError('response-bolos', error.message);
+            }
+        }
+
+        async function buscarBolo() {
+            const id = document.getElementById('bolo-id').value;
+            if (!id) { alert('Insira o ID'); return; }
+            try {
+                const response = await fetch(`${API_URL}/bolos/${id}`);
+                const data = await response.json();
+                showResponse('response-bolo-id', data, response.status);
+            } catch (error) {
+                showError('response-bolo-id', error.message);
+            }
+        }
+
+        async function criarBolo() {
+            try {
+                const body = JSON.parse(document.getElementById('criar-bolo-body').value);
+                const response = await fetch(`${API_URL}/bolos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(body)
+                });
+                const data = await response.json();
+                showResponse('response-criar-bolo', data, response.status);
+            } catch (error) {
+                showError('response-criar-bolo', error.message);
+            }
+        }
+
+        async function verCarrinho() {
+            try {
+                const response = await fetch(`${API_URL}/carrinho`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                showResponse('response-carrinho', data, response.status);
+            } catch (error) {
+                showError('response-carrinho', error.message);
+            }
+        }
+
+        async function adicionarCarrinho() {
+            const bolo_id = document.getElementById('carrinho-bolo-id').value;
+            const quantidade = document.getElementById('carrinho-quantidade').value;
+            if (!bolo_id) { alert('Insira o ID do bolo'); return; }
+            try {
+                const response = await fetch(`${API_URL}/carrinho/adicionar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ bolo_id, quantidade: parseInt(quantidade) })
+                });
+                const data = await response.json();
+                showResponse('response-adicionar-carrinho', data, response.status);
+            } catch (error) {
+                showError('response-adicionar-carrinho', error.message);
+            }
+        }
+
+        async function limparCarrinho() {
+            try {
+                const response = await fetch(`${API_URL}/carrinho/limpar`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                showResponse('response-limpar-carrinho', data, response.status);
+            } catch (error) {
+                showError('response-limpar-carrinho', error.message);
+            }
+        }
+
+        async function criarPedido() {
+            const clienteNome = document.getElementById('pedido-nome').value;
+            const clienteTelefone = document.getElementById('pedido-telefone').value;
+            try {
+                const response = await fetch(`${API_URL}/pedidos/criar`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ clienteNome, clienteTelefone })
+                });
+                const data = await response.json();
+                showResponse('response-criar-pedido', data, response.status);
+            } catch (error) {
+                showError('response-criar-pedido', error.message);
+            }
+        }
+
+        async function listarPedidos() {
+            try {
+                const response = await fetch(`${API_URL}/pedidos`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                showResponse('response-pedidos', data, response.status);
+            } catch (error) {
+                showError('response-pedidos', error.message);
+            }
+        }
+
+        async function gerarWhatsApp() {
+            const id = document.getElementById('whatsapp-pedido-id').value;
+            if (!id) { alert('Insira o ID do pedido'); return; }
+            try {
+                const response = await fetch(`${API_URL}/pedidos/${id}/whatsapp`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                showResponse('response-whatsapp', data, response.status);
+            } catch (error) {
+                showError('response-whatsapp', error.message);
+            }
+        }
+
+        async function listarUsuarios() {
+            try {
+                const response = await fetch(`${API_URL}/usuarios`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                showResponse('response-usuarios', data, response.status);
+            } catch (error) {
+                showError('response-usuarios', error.message);
+            }
+        }
+
+        async function testConexao() {
+            try {
+                const response = await fetch(`${API_URL}/teste/conexao`);
+                const data = await response.json();
+                showResponse('response-conexao', data, response.status);
+            } catch (error) {
+                showError('response-conexao', error.message);
+            }
+        }
+    </script>
+</body>
+</html>

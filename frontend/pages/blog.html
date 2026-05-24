@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!-- A&L Cakes - Blog / Redes Sociais (galeria estilo Instagram + posts) -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog & Redes - A&L Cakes</title>
+  <meta name="description" content="Acompanhe nosso Instagram, novidades e dicas de confeitaria artesanal." />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+  <!-- Header será carregado dinamicamente via header.js -->
+
+  <main class="container">
+    <h1 class="titulo-secao">Blog & Redes Sociais</h1>
+    <p class="subtitulo-secao">Inspiração, bastidores e novidades direto do nosso ateliê</p>
+
+    <!-- Galeria simulando Instagram -->
+<a href="https://www.instagram.com/a.l_cakescia/" target="_blank">
+  <h2 style="font-size:1.4rem; color:var(--rosa-escuro); margin-bottom:0.5rem;">
+    📷 @alcakes no Instagram
+  </h2>
+</a>
+
+    <p style="color:var(--texto-claro); margin-bottom:1rem;">Siga-nos para acompanhar nossas criações diárias.</p>
+    
+    <div class="galeria-instagram">
+      <div class="galeria-item" data-animar>
+        <img src="../assets/images/Insta4.jpg" alt="Foto Instagram 4">
+      </div>
+
+      <div class="galeria-item" data-animar>
+        <img src="../assets/images/Insta1.jpg" alt="Foto Instagram 1">
+      </div>
+
+      <div class="galeria-item" data-animar>
+        <img src="../assets/images/Insta7.jpg" alt="Foto Instagram 7">
+      </div>
+
+      <div class="galeria-item" data-animar>
+        <img src="../assets/images/Insta2.jpg" alt="Foto Instagram 2">
+      </div>
+
+      <div class="galeria-item" data-animar>
+        <img src="../assets/images/Insta9.jpg" alt="Foto Instagram 9">
+      </div>
+
+      <div class="galeria-item" data-animar>
+        <img src="../assets/images/Insta5.jpg" alt="Foto Instagram 5">
+      </div>
+
+      <div class="galeria-item" data-animar>
+        <img src="../assets/images/Insta10.jpg" alt="Foto Instagram 10">
+      </div>
+
+      <div class="galeria-item" data-animar>
+        <img src="../assets/images/Insta3.jpg" alt="Foto Instagram 3">
+      </div>
+
+      <div class="galeria-item" data-animar>
+        <img src="../assets/images/Insta8.jpg" alt="Foto Instagram 8">
+      </div>
+
+      <div class="galeria-item" data-animar>
+        <img src="../assets/images/Insta6.jpg" alt="Foto Instagram 6">
+      </div>
+    </div>
+
+    <!-- Posts do blog -->
+    <div class="posts-blog">
+      <article class="post-card" data-animar>
+        <span class="data">15 de Abril, 2026</span>
+        <h3>Ana Souza</h3>
+        <p>O bolo estava simplesmente perfeito! Muito saboroso, bonito e exatamente como eu pedi. Fez sucesso na festa!</p>
+      </article>
+
+      <article class="post-card" data-animar>
+        <span class="data">02 de Abril, 2026</span>
+        <h3>Marcos Oliveira</h3>
+        <p>Atendimento excelente e entrega no prazo. Os doces vieram impecáveis e todo mundo elogiou muito.</p>
+      </article>
+
+      <article class="post-card" data-animar>
+        <span class="data">25 de Março, 2026</span>
+        <h3>Juliana Lima</h3>
+        <p>Já é a segunda vez que compro e continuo apaixonada! Qualidade incrível e um capricho que faz toda diferença.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape-grid">
+      <div>
+        <h4>A&L Cakes</h4>
+        <p>Confeitaria artesanal feita com amor e ingredientes selecionados.</p>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <p>📍 Rua Pascoal Ranieri Mazzilli, 362</p>
+        <p>📞 (11) 96321-6219</p>
+      </div>
+      <div>
+        <h4>Atendimento</h4>
+        <p>Ter a Sáb: 11h às 18h</p>
+        <p>Domingo: sob encomenda</p>
+      </div>
+      <div>
+        <h4>Redes Sociais</h4>
+        <div class="redes">
+          <a href="https://api.whatsapp.com/message/LTZW3MOYNS5GJ1?autoload=1&app_absent=0&utm_source=ig" target="_blank" aria-label="WhatsApp">📱</a>
+          <a href="https://www.instagram.com/a.l_cakescia/" aria-label="Instagram">📷</a>
+
+        </div>
+      </div>
+    </div>
+    <div class="copyright">
+      © 2026 A&L Cakes. Todos os direitos reservados. Projeto acadêmico.
+    </div>
+  </footer>
+
+
+    <!-- MODAL CARRINHO -->
+     
+    <div class="overlay-carrinho" id="overlay-carrinho">
+
+      <div class="modal-carrinho">
+
+        <div class="topo-carrinho">
+
+          <h2>Seu Carrinho</h2>
+
+          <button class="fechar-carrinho" id="fechar-carrinho">
+            &times;
+          </button>
+
+        </div>
+
+        <div class="carrinho-itens">
+
+          <!-- ITEM -->
+          <div class="item-carrinho">
+
+            <img src="../assets/images/BoloRedVelvet.jpg" alt="Produto">
+
+            <div class="info-item">
+              <h3>Bolo Red Velvet</h3>
+              <p>R$ 89,90</p>
+            </div>
+
+            <button class="remover-item">
+              Remover
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="rodape-carrinho">
+
+          <div class="total-carrinho">
+            Total: <span>R$ 89,90</span>
+          </div>
+
+          <button class="btn-finalizar">
+            Finalizar Compra
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+
+      /* =========================================================
+        MODAL CARRINHO
+      ========================================================= */
+
+      const abrirCarrinho =
+        document.getElementById("abrir-carrinho");
+
+      const fecharCarrinho =
+        document.getElementById("fechar-carrinho");
+
+      const overlayCarrinho =
+        document.getElementById("overlay-carrinho");
+
+      /* Abrir modal */
+      abrirCarrinho.addEventListener("click", () => {
+        overlayCarrinho.classList.add("ativo");
+      });
+
+      /* Fechar modal */
+      fecharCarrinho.addEventListener("click", () => {
+        overlayCarrinho.classList.remove("ativo");
+      });
+
+      /* Fechar clicando fora */
+      overlayCarrinho.addEventListener("click", (e) => {
+
+        if (e.target === overlayCarrinho) {
+          overlayCarrinho.classList.remove("ativo");
+        }
+
+      });
+
+    </script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="../assets/js/controller.js"></script>
+  <script src="../assets/js/header.js"></script>
+  <script src="../assets/js/carrinho.js"></script>
+  <script src="../assets/js/script.js"></script>
+</body>
+</html>
+

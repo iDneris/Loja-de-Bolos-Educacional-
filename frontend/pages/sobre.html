@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<!-- A&L Cakes - Página Sobre Nós (história, missão, valores) -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sobre Nós - A&L Cakes</title>
+  <meta name="description" content="Conheça a história da A&L Cakes, nossa missão e os valores que guiam nossa confeitaria artesanal." />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+  <!-- Header será carregado dinamicamente via header.js -->
+
+  <main class="container">
+    <h1 class="titulo-secao">Nossa História</h1>
+    <p class="subtitulo-secao">Uma confeitaria nascida em casa, feita com amor</p>
+
+    <!-- Bloco história + foto -->
+    <section class="sobre-grid">
+    <div data-animar>
+      <video autoplay muted loop playsinline
+        style="
+          width: 100%;
+          max-width: 500px;     /* pode aumentar se quiser maior */
+          aspect-ratio: 4 / 4;  /* controla a “altura” proporcional */
+          object-fit: cover;
+          border-radius: 15px;
+          box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+          display: block;
+          margin: 0 auto;
+        ">
+        <source src="../assets/images/sobre2.mp4" type="video/mp4">
+        Seu navegador não suporta vídeo.
+      </video>
+    </div>
+      <div data-animar>
+        <h2>A&L Cakes começou na cozinha...</h2><br>
+        <p>Tudo começou há mais de 5 anos, quando decidimos transformar nossas receitas de família em um pequeno negócio. Os primeiros bolos saíam do forno de casa para aniversários de vizinhos e amigos.</p>
+        <p>Com o tempo, a procura cresceu. A experiência trouxe novas ideias, técnicas modernas e o nome <strong>A&L Cakes</strong> nasceu, uma homenagem à parceria que mistura tradição e inovação.</p>
+        <p>Hoje, atendemos casamentos, festas, eventos corporativos e clientes especiais que buscam o sabor verdadeiro de uma confeitaria feita à mão.</p>
+      </div>
+    </section>
+
+    <!-- Missão e valores -->
+    <h2 class="titulo-secao" style="margin-top:4rem;">Nossos valores</h2>
+    <div class="valores">
+      <div class="valor-card" data-animar>
+        <div class="icone">💖</div>
+        <h3>Carinho</h3>
+        <p>Cada produto é feito com dedicação, como se fosse para a nossa própria família.</p>
+      </div>
+      <div class="valor-card" data-animar>
+        <div class="icone">🌿</div>
+        <h3>Qualidade</h3>
+        <p>Selecionamos ingredientes frescos e de procedência confiável em cada receita.</p>
+      </div>
+      <div class="valor-card" data-animar>
+        <div class="icone">✨</div>
+        <h3>Tradição</h3>
+        <p>Receitas de família passadas por gerações, com toque artesanal único.</p>
+      </div>
+      <div class="valor-card" data-animar>
+        <div class="icone">🎂</div>
+        <h3>Personalização</h3>
+        <p>Cada pedido é único, adaptamos sabores e decoração ao seu momento especial.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="rodape">
+    <div class="rodape-grid">
+      <div>
+        <h4>A&L Cakes</h4>
+        <p>Confeitaria artesanal feita com amor e ingredientes selecionados.</p>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <p>📍 Rua Pascoal Ranieri Mazzilli, 362</p>
+        <p>📞 (11) 96321-6219</p>
+      </div>
+      <div>
+        <h4>Atendimento</h4>
+        <p>Ter a Sáb: 11h às 18h</p>
+        <p>Domingo: sob encomenda</p>
+      </div>
+      <div>
+        <h4>Redes Sociais</h4>
+        <div class="redes">
+          <a href="https://api.whatsapp.com/message/LTZW3MOYNS5GJ1?autoload=1&app_absent=0&utm_source=ig" target="_blank" aria-label="WhatsApp">📱</a>
+          <a href="https://www.instagram.com/a.l_cakescia/" aria-label="Instagram">📷</a>
+
+        </div>
+      </div>
+    </div>
+    <div class="copyright">
+      © 2026 A&L Cakes. Todos os direitos reservados. Projeto acadêmico.
+    </div>
+  </footer>
+
+
+    <!-- MODAL CARRINHO -->
+     
+    <div class="overlay-carrinho" id="overlay-carrinho">
+
+      <div class="modal-carrinho">
+
+        <div class="topo-carrinho">
+
+          <h2>Seu Carrinho</h2>
+
+          <button class="fechar-carrinho" id="fechar-carrinho">
+            &times;
+          </button>
+
+        </div>
+
+        <div class="carrinho-itens">
+
+          <!-- ITEM -->
+          <div class="item-carrinho">
+
+            <img src="../assets/images/BoloRedVelvet.jpg" alt="Produto">
+
+            <div class="info-item">
+              <h3>Bolo Red Velvet</h3>
+              <p>R$ 89,90</p>
+            </div>
+
+            <button class="remover-item">
+              Remover
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="rodape-carrinho">
+
+          <div class="total-carrinho">
+            Total: <span>R$ 89,90</span>
+          </div>
+
+          <button class="btn-finalizar">
+            Finalizar Compra
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+
+      /* =========================================================
+        MODAL CARRINHO
+      ========================================================= */
+
+      const abrirCarrinho =
+        document.getElementById("abrir-carrinho");
+
+      const fecharCarrinho =
+        document.getElementById("fechar-carrinho");
+
+      const overlayCarrinho =
+        document.getElementById("overlay-carrinho");
+
+      /* Abrir modal */
+      abrirCarrinho.addEventListener("click", () => {
+        overlayCarrinho.classList.add("ativo");
+      });
+
+      /* Fechar modal */
+      fecharCarrinho.addEventListener("click", () => {
+        overlayCarrinho.classList.remove("ativo");
+      });
+
+      /* Fechar clicando fora */
+      overlayCarrinho.addEventListener("click", (e) => {
+
+        if (e.target === overlayCarrinho) {
+          overlayCarrinho.classList.remove("ativo");
+        }
+
+      });
+
+    </script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="../assets/js/controller.js"></script>
+  <script src="../assets/js/header.js"></script>
+  <script src="../assets/js/carrinho.js"></script>
+  <script src="../assets/js/script.js"></script>
+</body>
+</html>
+

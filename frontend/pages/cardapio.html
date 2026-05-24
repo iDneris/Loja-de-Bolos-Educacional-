@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!-- A&L Cakes - Cardápio: lista todos os produtos -->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cardápio - A&L Cakes</title>
+  <meta name="description" content="Conheça nosso cardápio completo de bolos, tortas, macarons, brigadeiros e doces artesanais." />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+  <header class="navbar">
+  <div class="nav-container">
+    <img src="../assets/images/teste.png" alt="" style="width: 4.5%; border-radius: 50%;">
+    <a href="../index.html" class="logo">A&L<span> Cakes</span></a>
+    <button class="hamburguer" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+    <nav>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Início</a></li>
+        <li><a href="cardapio.html">Cardápio</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="sobre.html">Sobre</a></li>
+        <li id="admin-link" style="display: none;"><a href="painelAdministrativo.html">Painel Administrativo</a></li>
+        <li><a href="login.html" class="btn-login" id="btn-login-nav">Entrar</a></li>
+        <li>
+          <button class="btn-carrinho" id="abrir-carrinho">
+            🧺
+            <span class="contador-carrinho" id="contador-carrinho">0</span>
+          </button>
+        </li>
+        <li class="usuario-navbar" id="usuario-navbar-container" style="display: none;">
+          <button class="usuario-btn" id="usuario-btn">
+            Olá, <span id="usuario-nome">Cliente</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left: 5px;">
+              <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="dropdown-usuario" id="dropdown-usuario">
+            <a href="meusdados.html">Meus Dados</a>
+            <a href="pedidos.html">Meus Pedidos</a>
+            <a href="#" id="btn-sair">Sair</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  <!-- ===== CARDÁPIO ===== -->
+  <main class="container">
+    <h1 class="titulo-secao">Nosso Cardápio</h1>
+    <p class="subtitulo-secao">Escolha seu próximo doce favorito</p>
+
+    <!-- Grade de produtos (renderizada via JS) -->
+    <div class="produtos-grid" id="grid-produtos"></div>
+  </main>
+
+  <!-- ===== RODAPÉ ===== -->
+  <footer class="rodape">
+    <div class="rodape-grid">
+      <div>
+        <h4>A&L Cakes</h4>
+        <p>Confeitaria artesanal feita com amor e ingredientes selecionados.</p>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <p>📍 Rua Pascoal Ranieri Mazzilli, 362</p>
+        <p>📞 (11) 96321-6219</p>
+      </div>
+      <div>
+        <h4>Atendimento</h4>
+        <p>Ter a Sáb: 11h às 18h</p>
+        <p>Domingo: sob encomenda</p>
+      </div>
+      <div>
+        <h4>Redes Sociais</h4>
+        <div class="redes">
+          <a href="https://api.whatsapp.com/message/LTZW3MOYNS5GJ1?autoload=1&app_absent=0&utm_source=ig" target="_blank" aria-label="WhatsApp">📱</a>
+          <a href="https://www.instagram.com/a.l_cakescia/" aria-label="Instagram">📷</a>
+
+        </div>
+      </div>
+    </div>
+    <div class="copyright">
+      © 2026 A&L Cakes. Todos os direitos reservados. Projeto acadêmico.
+    </div>
+  </footer>
+
+
+  <!-- MODAL CARRINHO -->
+   
+    <div class="overlay-carrinho" id="overlay-carrinho">
+
+      <div class="modal-carrinho">
+
+        <div class="topo-carrinho">
+
+          <h2>Seu Carrinho</h2>
+
+          <button class="fechar-carrinho" id="fechar-carrinho">
+            &times;
+          </button>
+
+        </div>
+
+        <div class="carrinho-itens">
+
+          <!-- ITEM -->
+          <div class="item-carrinho">
+
+            <img src="../assets/images/BoloRedVelvet.jpg" alt="Produto">
+
+            <div class="info-item">
+              <h3>Bolo Red Velvet</h3>
+              <p>R$ 89,90</p>
+            </div>
+
+            <button class="remover-item">
+              Remover
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="rodape-carrinho">
+
+          <div class="total-carrinho">
+            Total: <span>R$ 89,90</span>
+          </div>
+
+          <button class="btn-finalizar">
+            Finalizar Compra
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <script>
+
+      /* =========================================================
+        MODAL CARRINHO
+      ========================================================= */
+
+      const abrirCarrinho =
+        document.getElementById("abrir-carrinho");
+
+      const fecharCarrinho =
+        document.getElementById("fechar-carrinho");
+
+      const overlayCarrinho =
+        document.getElementById("overlay-carrinho");
+
+      /* Abrir modal */
+      abrirCarrinho.addEventListener("click", () => {
+        overlayCarrinho.classList.add("ativo");
+      });
+
+      /* Fechar modal */
+      fecharCarrinho.addEventListener("click", () => {
+        overlayCarrinho.classList.remove("ativo");
+      });
+
+      /* Fechar clicando fora */
+      overlayCarrinho.addEventListener("click", (e) => {
+
+        if (e.target === overlayCarrinho) {
+          overlayCarrinho.classList.remove("ativo");
+        }
+
+      });
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="../assets/js/controller.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/produtos.js"></script>
+    <script src="../assets/js/carrinho.js"></script>
+    <script src="../assets/js/script.js"></script>
+</body>
+</html>
+

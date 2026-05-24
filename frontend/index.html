@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<!--
+  A&L Cakes - Página Inicial (Home)
+  Apresenta a loja, hero, destaques de produtos e chamada para o cardápio.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A&L Cakes - Bolos e Doces Artesanais</title>
+  <meta name="description" content="A&L Cakes: bolos artesanais, doces finos e confeitaria sob encomenda. Transformando momentos em doces memórias." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+  <!-- Header será carregado dinamicamente via header.js -->
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-texto">
+        <h1>Transformando momentos em <span>doces memórias</span></h1>
+        <p>Bolos artesanais, doces finos e tortas feitas com carinho, porque cada celebração merece um sabor inesquecível.</p>
+        <a href="pages/cardapio.html" class="btn">Ver Cardápio</a>
+      </div>
+      <div class="hero-imagem">
+        <img src="assets/images/hero-bolo.jpg" alt="Bolo de morango com chantilly" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== APRESENTAÇÃO ===== -->
+  <section class="container apresentacao" data-animar>
+    <h2 class="titulo-secao">Confeitaria feita à mão</h2>
+    <p>Na A&L Cakes acreditamos que doces contam histórias. Cada receita é preparada com ingredientes selecionados, técnicas tradicionais e um toque de afeto que faz toda a diferença.</p>
+  </section>
+
+  <!-- ===== DESTAQUES DE PRODUTOS ===== -->
+  <section class="container">
+    <h2 class="titulo-secao">Nossos destaques</h2>
+    <p class="subtitulo-secao">Os queridinhos da casa, escolhidos pelos nossos clientes</p>
+    <div class="produtos-grid grid-home" id="grid-destaques">
+      <!-- Cards renderizados via JS (produtos.js) -->
+    </div>
+    <div style="text-align:center; margin-top:3rem;">
+      <a href="pages/cardapio.html" class="btn btn-secundario">Ver cardápio completo</a>
+    </div>
+  </section>
+
+  <!-- ===== RODAPÉ ===== -->
+  <footer class="rodape">
+    <div class="rodape-grid">
+      <div>
+        <h4>A&L Cakes</h4>
+        <p>Confeitaria artesanal feita com amor e ingredientes selecionados.</p>
+      </div>
+      <div>
+        <h4>Contato</h4>
+        <p>📍 Rua Pascoal Ranieri Mazzilli, 362</p>
+        <p>📞 (11) 96321-6219</p>
+      </div>
+      <div>
+        <h4>Atendimento</h4>
+        <p>Ter a Sáb: 11h às 18h</p>
+        <p>Domingo: sob encomenda</p>
+      </div>
+      <div>
+        <h4>Redes Sociais</h4>
+        <div class="redes">
+          <a href="https://api.whatsapp.com/message/LTZW3MOYNS5GJ1?autoload=1&app_absent=0&utm_source=ig" target="_blank" aria-label="WhatsApp">📱</a>
+          <a href="https://www.instagram.com/a.l_cakescia/" aria-label="Instagram">📷</a>
+
+        </div>
+      </div>
+    </div>
+    <div class="copyright">
+      © 2026 A&L Cakes. Todos os direitos reservados. Projeto acadêmico.
+    </div>
+  </footer>
+
+      <!-- MODAL CARRINHO -->
+    <div class="overlay-carrinho" id="overlay-carrinho">
+
+      <div class="modal-carrinho">
+
+        <div class="topo-carrinho">
+
+          <h2>Seu Carrinho</h2>
+
+          <button class="fechar-carrinho"
+            id="fechar-carrinho">
+
+            &times;
+
+          </button>
+
+        </div>
+
+        <div class="carrinho-itens">
+
+          <div class="item-carrinho">
+
+            <img src="assets/images/BoloRedVelvet.jpg"
+              alt="Produto">
+
+            <div class="info-item">
+
+              <h3>Bolo Red Velvet</h3>
+
+              <p>R$ 89,90</p>
+
+            </div>
+
+            <button class="remover-item">
+
+              Remover
+
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="rodape-carrinho">
+
+          <div class="total-carrinho">
+
+            Total:
+            <span>R$ 89,90</span>
+
+          </div>
+
+          <button class="btn-finalizar">
+
+            Finalizar Compra
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/controller.js"></script>
+    <script src="assets/js/header.js"></script>
+    <script src="assets/js/produtos.js"></script>
+    <script src="assets/js/carrinho.js"></script>
+    <script src="assets/js/script.js"></script>
+
+    <script>
+
+    /* =========================================================
+      MODAL CARRINHO
+    ========================================================= */
+
+    const abrirCarrinho =
+      document.getElementById("abrir-carrinho");
+
+    const fecharCarrinho =
+      document.getElementById("fechar-carrinho");
+
+    const overlayCarrinho =
+      document.getElementById("overlay-carrinho");
+
+    /* Abrir modal */
+    abrirCarrinho.addEventListener("click", () => {
+
+      overlayCarrinho.classList.add("ativo");
+
+    });
+
+    /* Fechar modal */
+    fecharCarrinho.addEventListener("click", () => {
+
+      overlayCarrinho.classList.remove("ativo");
+
+    });
+
+    /* Fechar clicando fora */
+    overlayCarrinho.addEventListener("click", (e) => {
+
+      if (e.target === overlayCarrinho) {
+
+        overlayCarrinho.classList.remove("ativo");
+
+      }
+
+    });
+
+    </script>
+    <script src='assets/js/carrinho.js'></script>
+
+    </body>
+    </html>
+
