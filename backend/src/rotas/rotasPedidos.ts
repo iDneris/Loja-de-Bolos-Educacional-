@@ -4,6 +4,18 @@ import { autenticacao } from '../middlewares/autenticacao';
 
 const rotas = Router();
 
+/**
+ * @swagger
+ * /pedidos/limpar:
+ *   delete:
+ *     summary: Limpa todos os pedidos (apenas desenvolvimento)
+ *     tags: [Pedidos]
+ *     responses:
+ *       200:
+ *         description: Pedidos limpos com sucesso
+ */
+rotas.delete('/limpar', controladorPedido.limpar);
+
 // Todas as rotas de pedidos requerem autenticacao
 rotas.use(autenticacao);
 
@@ -59,6 +71,31 @@ rotas.get('/', controladorPedido.listar);
  *         description: Pedido não encontrado
  */
 rotas.get('/:id', controladorPedido.buscarPorId);
+
+/**
+ * @swagger
+ * /pedidos/{id}:
+ *   delete:
+ *     summary: Exclui um pedido pendente
+ *     tags: [Pedidos]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID do pedido
+ *     responses:
+ *       200:
+ *         description: Pedido excluido
+ *       400:
+ *         description: Pedido nao pode ser excluido
+ *       404:
+ *         description: Pedido nao encontrado
+ */
+rotas.delete('/:id', controladorPedido.excluir);
 
 /**
  * @swagger
