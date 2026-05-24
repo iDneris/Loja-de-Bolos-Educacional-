@@ -1,7 +1,14 @@
 $(document).ready(function(){
     // listar_bolos();
+    atualizarAnoRodape();
 
 })
+
+function atualizarAnoRodape() {
+  document.querySelectorAll('[data-current-year]').forEach((elemento) => {
+    elemento.textContent = new Date().getFullYear();
+  });
+}
 
 // Funcao master para chamar qualquer endpoint da API
 async function apiCall(endpoint, method = 'GET', body = null, needsAuth = false) {
