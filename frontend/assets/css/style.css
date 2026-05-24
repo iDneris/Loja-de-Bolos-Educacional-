@@ -951,7 +951,7 @@ img {
 
 /* Classe para esconder em desktop */
 .mobile-only {
-  display: none !important;
+  display: none;
 }
 
 /* =========================================================
@@ -959,10 +959,6 @@ img {
    ========================================================= */
 @media (max-width: 860px) {
   /* Mostrar elementos mobile-only */
-  .mobile-only {
-    display: block !important;
-  }
-  
   /* Menu vira hambúrguer */
   .hamburguer {
     display: flex;
@@ -990,14 +986,25 @@ img {
   }
 
   .nav-menu li,
-  .nav-menu a,
-  .nav-menu button {
+  .nav-menu a {
     width: 100%;
   }
 
   .nav-menu a {
     display: block;
     padding: 0.65rem 0;
+  }
+
+  .nav-menu .btn-carrinho {
+    width: 46px;
+    height: 46px;
+    margin-top: 0.4rem;
+  }
+
+  .nav-menu .usuario-btn {
+    width: auto;
+    max-width: 100%;
+    text-align: left;
   }
 
   .nav-container {
