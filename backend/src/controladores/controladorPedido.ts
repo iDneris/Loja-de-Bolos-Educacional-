@@ -64,4 +64,30 @@ export const controladorPedido = {
 
     res.status(200).json({ mensagem });
   },
+
+  // DELETE /pedidos/limpar - Limpa todos os pedidos (apenas desenvolvimento)
+  async limpar(req: Request, res: Response) {
+    const sucesso = await servicoPedido.limparTodos();
+
+    if (!sucesso) {
+      return res.status(500).json({ mensagem: 'Erro ao limpar pedidos' });
+    }
+
+    res.status(200).json({ mensagem: 'Pedidos limpos com sucesso' });
+  },
+
+  // DELETE /pedidos/:id - Exclui um pedido pendente
+  async excluir(req: Request, res: Response) {
+    // console.log('Controller excluir chamado, ID:', req.params.id);
+    const { id } = req.params;
+    const sucesso = await servicoPedido.excluir(id);
+
+    if (!sucesso) {
+      // console.log('Exclusão falhou no serviço');
+      return res.status(400).json({ mensagem: 'Pedido nao pode ser excluido' });
+    }
+
+    // console.log('Exclusão bem sucedida');
+    res.status(200).json({ mensagem: 'Pedido excluido com sucesso' });
+  },
 };
