@@ -34,10 +34,9 @@ function atualizarUsuario() {
 
   if (usuario && token) {
     $('#usuario-nome').text(usuario.nome);
-    $('#mobile-usuario-nome').text(usuario.nome);
     $('#usuario-navbar-container').show();
-    $('#mobile-boasvindas').show();
-    $('#btn-login-nav').hide();
+    $('#auth-buttons-container').hide();
+    $('.carrinho-row').show();
 
     if (usuario.role === 'admin') {
       $('#admin-link').show();
@@ -46,9 +45,9 @@ function atualizarUsuario() {
     }
   } else {
     $('#usuario-navbar-container').hide();
-    $('#mobile-boasvindas').hide();
-    $('#btn-login-nav').show();
+    $('#auth-buttons-container').show();
     $('#admin-link').hide();
+    $('.carrinho-row').hide();
   }
 
   $('#btn-sair').off('click').on('click', function(e) {
