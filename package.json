@@ -8,5 +8,17 @@
   "scripts": {
     "install:backend": "cd backend && npm install",
     "build:backend": "cd backend && npm run build"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.7",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.20.0",
+    "postgres": "^3.4.9",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0"
   }
 }
