@@ -283,3 +283,33 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("form-editar-cliente")?.addEventListener("submit", salvarEdicaoCliente);
 });
+
+/* =========================================================
+   MODAL CARRINHO - abre/fecha em todas as páginas
+   ========================================================= */
+function configurarModalCarrinho() {
+  const abrirCarrinho = document.getElementById("abrir-carrinho");
+  const fecharCarrinho = document.getElementById("fechar-carrinho");
+  const overlayCarrinho = document.getElementById("overlay-carrinho");
+
+  if (!abrirCarrinho || !fecharCarrinho || !overlayCarrinho) return;
+
+  /* Abrir modal */
+  abrirCarrinho.addEventListener("click", () => {
+    overlayCarrinho.classList.add("ativo");
+  });
+
+  /* Fechar modal */
+  fecharCarrinho.addEventListener("click", () => {
+    overlayCarrinho.classList.remove("ativo");
+  });
+
+  /* Fechar clicando fora */
+  overlayCarrinho.addEventListener("click", (e) => {
+    if (e.target === overlayCarrinho) {
+      overlayCarrinho.classList.remove("ativo");
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", configurarModalCarrinho);
