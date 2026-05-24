@@ -13,7 +13,7 @@ $(document).ready(function() {
 async function carregarCarrinho() {
   try {
     const response = await apiCall('/carrinho', 'GET', null, true);
-    console.log('Resposta carrinho:', response);
+    // console.log('Resposta carrinho:', response);
     const carrinho = response.itens || [];
     renderizarCarrinho(carrinho);
   } catch (error) {
