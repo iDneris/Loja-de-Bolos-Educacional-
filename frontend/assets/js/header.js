@@ -61,7 +61,7 @@ function atualizarUsuario() {
 
 function inicializarHeader() {
   $('.hamburguer').on('click', function() {
-    $('.nav-menu').toggleClass('active');
+    $('.nav-menu').toggleClass('aberto');
   });
   
   $(document).on('click', '#usuario-btn', function(e) {
