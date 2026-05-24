@@ -33,7 +33,7 @@ const rotas = Router();
  *                   preco:
  *                     type: number
  *                     example: 45.00
- *                   imagem:
+ *                   imagem_url:
  *                     type: string
  *                     example: "https://exemplo.com/chocolate.jpg"
  *                   estoque:
@@ -81,7 +81,7 @@ rotas.get('/:id', controladorBolo.buscarPorId);
  *               - nome
  *               - descricao
  *               - preco
- *               - imagem
+ *               - imagem_url
  *               - estoque
  *             properties:
  *               nome:
@@ -93,7 +93,7 @@ rotas.get('/:id', controladorBolo.buscarPorId);
  *               preco:
  *                 type: number
  *                 example: 40.00
- *               imagem:
+ *               imagem_url:
  *                 type: string
  *                 example: "https://exemplo.com/limao.jpg"
  *               estoque:
@@ -137,7 +137,7 @@ rotas.post('/', autenticacao, autorizacao(['admin']), controladorBolo.criar);
  *                 type: string
  *               preco:
  *                 type: number
- *               imagem:
+ *               imagem_url:
  *                 type: string
  *               estoque:
  *                 type: number

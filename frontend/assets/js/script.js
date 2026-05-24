@@ -112,7 +112,7 @@ function configurarAdmin() {
     const nome = form.nome.value.trim();
     const descricao = form.descricao.value.trim();
     const preco = parseFloat(form.preco.value);
-    const imagem = form.imagem.value.trim();
+    const imagem = form.imagem_url.value.trim();
 
     if (!nome || !descricao || isNaN(preco) || preco <= 0) {
       return exibirMensagem(form, "Preencha todos os campos corretamente.", "erro");

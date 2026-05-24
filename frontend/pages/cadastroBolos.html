@@ -464,7 +464,7 @@
       
       tbody.html(produtos.map(p => `
         <tr>
-          <td><img src="${p.imagem}" alt="${p.nome}"></td>
+          <td><img src="${p.imagem_url}" alt="${p.nome}"></td>
           <td>${p.nome}</td>
           <td>${p.descricao.substring(0, 50)}...</td>
           <td>R$ ${p.preco.toFixed(2).replace('.', ',')}</td>
@@ -492,7 +492,7 @@
         $('#nome').val(produto.nome);
         $('#descricao').val(produto.descricao);
         $('#preco').val(produto.preco);
-        $('#imagem').val(produto.imagem);
+        $('#imagem').val(produto.imagem_url);
         $('#estoque').val(produto.estoque);
         
         $('#modal-produto').addClass('show');

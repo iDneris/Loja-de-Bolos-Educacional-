@@ -4,7 +4,7 @@ export interface Bolo {
   nome: string;
   descricao: string;
   preco: number;
-  imagem: string;
+  imagem_url: string;
   estoque: number;
 }
 
@@ -13,7 +13,7 @@ export interface DadosNovoBolo {
   nome: string;
   descricao: string;
   preco: number;
-  imagem: string;
+  imagem_url: string;
   estoque: number;
 }
 
@@ -22,6 +22,6 @@ export interface DadosAtualizarBolo {
   nome?: string;
   descricao?: string;
   preco?: number;
-  imagem?: string;
+  imagem_url?: string;
   estoque?: number;
 }

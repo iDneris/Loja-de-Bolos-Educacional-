@@ -26,7 +26,7 @@ export const controladorBolo = {
     const dados: DadosNovoBolo = req.body;
 
     // Validação básica
-    if (!dados.nome || !dados.descricao || dados.preco === undefined || !dados.imagem || dados.estoque === undefined) {
+    if (!dados.nome || !dados.descricao || dados.preco === undefined || !dados.imagem_url || dados.estoque === undefined) {
       return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios' });
     }
 

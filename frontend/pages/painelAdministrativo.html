@@ -852,7 +852,7 @@
         $('#tabela-produtos').html(produtos.map(p => {
           return `
             <tr>
-              <td><img src="${p.imagem}" alt="${p.nome}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;"></td>
+              <td><img src="${p.imagem_url}" alt="${p.nome}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;"></td>
               <td>${p.nome}</td>
               <td>R$ ${p.preco.toFixed(2).replace('.', ',')}</td>
               <td class="acoes">
@@ -889,7 +889,7 @@
         $('#produto-nome').val(produto.nome);
         $('#produto-descricao').val(produto.descricao);
         $('#produto-preco').val(produto.preco);
-        $('#produto-imagem').val(produto.imagem);
+        $('#produto-imagem').val(produto.imagem_url);
         
         $('#modal-produto').addClass('show');
       } catch (error) {

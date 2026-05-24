@@ -39,7 +39,7 @@ function renderizarProdutoUnico(produto) {
   container.innerHTML = `
     <div class="produto-layout">
       <div class="produto-detalhe-img" data-animar>
-        <img src="${produto.imagem}" alt="${produto.nome}">
+        <img src="${produto.imagem_url}" alt="${produto.nome}">
       </div>
       <div class="produto-detalhe-info" data-animar>
         <span class="tag-produto">Artesanal</span>
@@ -157,7 +157,7 @@ function renderizarCardapio(produtos) {
   grid.innerHTML = produtos.map((p) => `
     <article class="produto-card" data-animar data-produto-id="${p.id}">
       <a href="${LINK_PRODUTO}?id=${p.id}" class="produto-link">
-        <img src="${p.imagem}" alt="${p.nome}" loading="lazy">
+        <img src="${p.imagem_url}" alt="${p.nome}" loading="lazy">
         <div class="produto-info">
           <h3>${p.nome}</h3>
           <p>${p.descricao}</p>
@@ -188,7 +188,7 @@ function renderizarDestaques(produtos) {
   const destaques = produtos.slice(0, 4);
   grid.innerHTML = destaques.map((p) => `
     <article class="produto-card" data-animar onclick="window.location.href='${LINK_PRODUTO}?id=${p.id}'">
-      <img src="${p.imagem}" alt="${p.nome}" loading="lazy">
+      <img src="${p.imagem_url}" alt="${p.nome}" loading="lazy">
       <div class="produto-info">
         <h3>${p.nome}</h3>
         <p>${p.descricao}</p>
