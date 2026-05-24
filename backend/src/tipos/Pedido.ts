@@ -11,6 +11,7 @@ export interface ItemPedido {
 // Dados do pedido completo
 export interface Pedido {
   id: string;
+  numero_pedido?: number;
   clienteId: string;
   clienteNome?: string;
   clienteTelefone?: string;
