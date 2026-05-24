@@ -35,8 +35,8 @@ app.use(cors({
 }));
 
 // Servir arquivos estáticos da pasta public
-app.use(express.static(diretorioPublico));
 app.use(express.static(diretorioFrontend));
+app.use(express.static(diretorioPublico, { index: false }));
 
 // Documentação Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig, {
