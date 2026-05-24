@@ -28,7 +28,7 @@ CREATE TABLE bolos (
   nome TEXT NOT NULL,
   descricao TEXT NOT NULL,
   preco DECIMAL(10,2) NOT NULL CHECK (preco > 0),
-  imagem TEXT NOT NULL,
+  imagem_url TEXT NOT NULL,
   estoque INTEGER NOT NULL DEFAULT 0 CHECK (estoque >= 0),
   criado_em TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -172,7 +172,7 @@ USING (true);
 -- ============================================
 -- DADOS INICIAIS - BOLOS
 -- ============================================
-INSERT INTO bolos (nome, descricao, preco, imagem, estoque) VALUES
+INSERT INTO bolos (nome, descricao, preco, imagem_url, estoque) VALUES
 ('Bolo de Chocolate', 'Delicioso bolo de chocolate com cobertura cremosa', 45.00, 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400', 10),
 ('Bolo de Morango', 'Bolo leve com morangos frescos e chantilly', 50.00, 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=400', 8),
 ('Bolo de Cenoura', 'Tradicional bolo de cenoura com cobertura de chocolate', 35.00, 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=400', 12),
