@@ -6,29 +6,31 @@
     <button class="hamburguer" aria-label="Abrir menu"><span></span><span></span><span></span></button>
     <nav>
       <ul class="nav-menu">
-        <!-- BOAS-VINDAS MOBILE - so aparece em telas pequenas -->
-        <li id="mobile-boasvindas" class="mobile-only" style="display: none; border-bottom: 1px solid rgba(217, 122, 163, 0.2); margin-bottom: 0.5rem; padding-bottom: 0.5rem;">
-          <span style="color: var(--rosa-escuro); font-weight: 600;">Olá, <span id="mobile-usuario-nome">Cliente</span>!</span>
-        </li>
-        <li><a href="index.html">Início</a></li>
-        <li><a href="pages/cardapio.html">Cardápio</a></li>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="pages/cardapio.html">Cardapio</a></li>
         <li><a href="pages/blog.html">Blog</a></li>
         <li><a href="pages/sobre.html">Sobre</a></li>
         <li id="admin-link" style="display: none;"><a href="pages/painelAdministrativo.html">Painel Administrativo</a></li>
-        <li><a href="pages/login.html" class="btn-login" id="btn-login-nav">Entrar</a></li>
+        <li id="auth-buttons-container">
+          <div class="auth-buttons-row">
+            <a href="pages/login.html" class="btn-login" id="btn-login-nav">Entrar</a>
+            <a href="pages/cadastro.html" class="btn-cadastro" id="btn-cadastro-nav">Criar conta</a>
+          </div>
+        </li>
 
         <!-- CARRINHO -->
-        <li>
+        <li class="carrinho-row">
           <button class="btn-carrinho" id="abrir-carrinho">
-            🧺
+            <span class="texto-carrinho-mobile">Carrinho</span>
+            <span class="icone-carrinho" aria-hidden="true">🛒</span>
             <span class="contador-carrinho" id="contador-carrinho">0</span>
           </button>
         </li>
 
-        <!-- USUÁRIO -->
+        <!-- USUARIO -->
         <li class="usuario-navbar" id="usuario-navbar-container" style="display: none;">
           <button class="usuario-btn" id="usuario-btn">
-            Olá, <span id="usuario-nome">Cliente</span>
+            Ola, <span id="usuario-nome">Cliente</span>
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left: 5px;">
               <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
