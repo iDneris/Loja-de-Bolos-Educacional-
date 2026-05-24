@@ -97,6 +97,8 @@ async function criarTabelas() {
       `CREATE INDEX IF NOT EXISTS idx_carrinho_usuario ON carrinho_itens(usuario_id);`,
       `CREATE INDEX IF NOT EXISTS idx_carrinho_bolo ON carrinho_itens(bolo_id);`,
       
+      `ALTER TABLE bolos ADD COLUMN IF NOT EXISTS imagem_url TEXT;`,
+      
       `ALTER TABLE usuarios ENABLE ROW LEVEL SECURITY;`,
       `ALTER TABLE carrinho_itens ENABLE ROW LEVEL SECURITY;`,
       
@@ -262,9 +264,9 @@ async function popularDados() {
       
       // Criar bolos
       const bolos = [
-        { nome: 'Bolo de Chocolate', descricao: 'Delicioso bolo de chocolate com cobertura', preco: 45.00, imagem: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587', estoque: 10 },
-        { nome: 'Bolo de Cenoura', descricao: 'Bolo de cenoura tradicional com chocolate', preco: 35.00, imagem: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729', estoque: 15 },
-        { nome: 'Bolo de Morango', descricao: 'Bolo de morango com chantilly', preco: 55.00, imagem: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187', estoque: 8 }
+        { nome: 'Bolo de Chocolate', descricao: 'Delicioso bolo de chocolate com cobertura', preco: 45.00, imagem_url: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587', estoque: 10 },
+        { nome: 'Bolo de Cenoura', descricao: 'Bolo de cenoura tradicional com chocolate', preco: 35.00, imagem_url: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729', estoque: 15 },
+        { nome: 'Bolo de Morango', descricao: 'Bolo de morango com chantilly', preco: 55.00, imagem_url: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187', estoque: 8 }
       ];
       
       console.log('Criando bolos iniciais...');
@@ -273,8 +275,8 @@ async function popularDados() {
       for (const bolo of bolos) {
         try {
           await client.query(
-            `INSERT INTO bolos (nome, descricao, preco, imagem, estoque) VALUES ($1, $2, $3, $4, $5)`,
-            [bolo.nome, bolo.descricao, bolo.preco, bolo.imagem, bolo.estoque]
+            `INSERT INTO bolos (nome, descricao, preco, imagem_url, estoque) VALUES ($1, $2, $3, $4, $5)`,
+            [bolo.nome, bolo.descricao, bolo.preco, bolo.imagem_url, bolo.estoque]
           );
           console.log(`  ${bolo.nome}: OK`);
           bolosCriados++;
