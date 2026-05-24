@@ -146,5 +146,8 @@ vite.config.ts.timestamp-*
 .DS_Store
 Thumbs.db
 
+# VSCode
+.vscode/
+
 # Test scripts
 tests/
