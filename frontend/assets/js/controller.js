@@ -1,7 +1,7 @@
 $(document).ready(function(){
     // listar_bolos();
     atualizarAnoRodape();
-
+    detectarPortaAPI();
 })
 
 function atualizarAnoRodape() {
@@ -10,11 +10,42 @@ function atualizarAnoRodape() {
   });
 }
 
+// Detecta qual porta da API está disponível
+let API_URL_DETECTADA = null;
+
+async function detectarPortaAPI() {
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  
+  if (!isLocalhost) {
+    API_URL_DETECTADA = '';
+    return;
+  }
+
+  const portas = [3000, 3001];
+  
+  for (const porta of portas) {
+    try {
+      const response = await fetch(`http://localhost:${porta}/bolos`, { method: 'HEAD' });
+      if (response.ok || response.status === 404 || response.status === 401) {
+        API_URL_DETECTADA = `http://localhost:${porta}`;
+        // console.log(`API detectada na porta ${porta}`);
+        return;
+      }
+    } catch (error) {
+      // Porta não disponível, tenta a próxima
+    }
+  }
+  
+  // Se nenhuma porta respondeu, usa a padrão
+  API_URL_DETECTADA = 'http://localhost:3000';
+}
+
 // Funcao master para chamar qualquer endpoint da API
 async function apiCall(endpoint, method = 'GET', body = null, needsAuth = false) {
-  // Detecta se está em produção ou desenvolvimento
-  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  const API_URL = isLocalhost ? 'http://localhost:3001' : '';
+  // Aguarda detecção da porta se ainda não foi feita
+  if (API_URL_DETECTADA === null) {
+    await detectarPortaAPI();
+  }
 
   const config = {
     method: method,
@@ -37,7 +68,7 @@ async function apiCall(endpoint, method = 'GET', body = null, needsAuth = false)
   }
 
   try {
-    const response = await fetch(`${API_URL}${endpoint}`, config);
+    const response = await fetch(`${API_URL_DETECTADA}${endpoint}`, config);
     const contentType = response.headers.get('content-type') || '';
     const data = contentType.includes('application/json') ? await response.json() : null;
 
