@@ -25,9 +25,14 @@ export const controladorBolo = {
   async criar(req: Request, res: Response) {
     const dados: DadosNovoBolo = req.body;
 
-    // Validação básica
-    if (!dados.nome || !dados.descricao || dados.preco === undefined || !dados.imagem_url || dados.estoque === undefined) {
+    // Validação básica (estoque é opcional, padrão 0 para venda sob encomenda)
+    if (!dados.nome || !dados.descricao || dados.preco === undefined || !dados.imagem_url) {
       return res.status(400).json({ mensagem: 'Todos os campos são obrigatórios' });
+    }
+
+    // Define estoque padrão como 0 se não fornecido (venda sob encomenda)
+    if (dados.estoque === undefined) {
+      dados.estoque = 0;
     }
 
     const novoBolo = await servicoBolo.criar(dados);
