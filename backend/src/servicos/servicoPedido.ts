@@ -45,13 +45,24 @@ export const servicoPedido = {
       // 4. Calcula total
       const valorTotal = itensCarrinho.reduce((acc, item) => acc + item.subtotal, 0);
 
-      // 5. Cria o pedido no Supabase
+      // 5. Gera numero_pedido incremental
+      const { data: ultimoPedido } = await supabase
+        .from('pedidos')
+        .select('numero_pedido')
+        .order('numero_pedido', { ascending: false })
+        .limit(1)
+        .single();
+      
+      const numeroPedido = (ultimoPedido?.numero_pedido || 0) + 1;
+
+      // 6. Cria o pedido no Supabase
       const { data: pedidoData, error: pedidoError } = await supabase
         .from('pedidos')
         .insert([{
           cliente_id: cliente.id,
           total: valorTotal,
           status: 'pendente',
+          numero_pedido: numeroPedido,
         }])
         .select()
         .single();
@@ -61,7 +72,7 @@ export const servicoPedido = {
         return null;
       }
 
-      // 6. Cria os itens do pedido
+      // 7. Cria os itens do pedido
       const itensParaInserir = itensCarrinho.map(item => ({
         pedido_id: pedidoData.id,
         bolo_id: item.bolo_id,
@@ -79,7 +90,7 @@ export const servicoPedido = {
         return null;
       }
 
-      // 7. Reduz o estoque dos bolos
+      // 8. Reduz o estoque dos bolos
       for (const item of itensCarrinho) {
         const sucesso = await servicoBolo.reduzirEstoque(item.bolo_id, item.quantidade);
         if (!sucesso) {
@@ -87,10 +98,10 @@ export const servicoPedido = {
         }
       }
 
-      // 8. Limpa o carrinho
+      // 9. Limpa o carrinho
       await servicoCarrinho.limpar(usuarioId);
 
-      // 9. Monta itens do pedido para retorno
+      // 10. Monta itens do pedido para retorno
       const itensPedido: ItemPedido[] = itensCarrinho.map(item => ({
         boloId: item.bolo_id,
         nomeBolo: item.bolo_nome,
@@ -98,9 +109,10 @@ export const servicoPedido = {
         precoUnitario: item.bolo_preco,
       }));
 
-      // 10. Retorna o pedido completo
+      // 11. Retorna o pedido completo
       return {
         id: pedidoData.id,
+        numero_pedido: pedidoData.numero_pedido,
         clienteId: cliente.id,
         clienteNome: cliente.nome,
         clienteTelefone: cliente.telefone,
@@ -183,6 +195,7 @@ export const servicoPedido = {
 
         return {
           id: p.id,
+          numero_pedido: p.numero_pedido,
           clienteId: p.cliente_id,
           clienteNome: p.clientes?.nome,
           clienteTelefone: p.clientes?.telefone,
@@ -190,11 +203,22 @@ export const servicoPedido = {
           total: p.total,
           status: p.status,
           data: new Date(p.criado_em),
+          criado_em: p.criado_em,
         };
       })
     );
 
-    return pedidosCompletos;
+    // Gera numero_pedido sequencial baseado na ordem de criacao
+    const ordenados = pedidosCompletos.sort((a, b) => 
+      new Date(a.criado_em).getTime() - new Date(b.criado_em).getTime()
+    );
+    
+    ordenados.forEach((pedido, index) => {
+      pedido.numero_pedido = index + 1;
+    });
+
+    // Retorna em ordem decrescente (mais recente primeiro)
+    return ordenados.reverse();
   },
 
   // Busca pedido por ID com todos os detalhes
@@ -244,6 +268,7 @@ export const servicoPedido = {
 
     return {
       id: pedidoData.id,
+      numero_pedido: pedidoData.numero_pedido,
       clienteId: pedidoData.cliente_id,
       clienteNome: pedidoData.clientes?.nome,
       clienteTelefone: pedidoData.clientes?.telefone,
@@ -306,6 +331,7 @@ export const servicoPedido = {
 
         return {
           id: p.id,
+          numero_pedido: p.numero_pedido,
           clienteId: p.cliente_id,
           clienteNome: p.clientes?.nome,
           clienteTelefone: p.clientes?.telefone,
@@ -313,11 +339,22 @@ export const servicoPedido = {
           total: p.total,
           status: p.status,
           data: new Date(p.criado_em),
+          criado_em: p.criado_em,
         };
       })
     );
 
-    return pedidosCompletos;
+    // Gera numero_pedido sequencial baseado na ordem de criacao
+    const ordenados = pedidosCompletos.sort((a, b) => 
+      new Date(a.criado_em).getTime() - new Date(b.criado_em).getTime()
+    );
+    
+    ordenados.forEach((pedido, index) => {
+      pedido.numero_pedido = index + 1;
+    });
+
+    // Retorna em ordem decrescente (mais recente primeiro)
+    return ordenados.reverse();
   },
 
   // Gera mensagem para WhatsApp
@@ -343,5 +380,67 @@ export const servicoPedido = {
     mensagem += `Pedido realizado em: ${pedido.data.toLocaleString('pt-BR')}`;
 
     return mensagem;
+  },
+
+  // Limpa todos os pedidos (apenas para desenvolvimento)
+  async limparTodos(): Promise<boolean> {
+    try {
+      // Primeiro deleta os itens dos pedidos
+      const { error: itensError } = await supabase
+        .from('pedido_itens')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // Deleta todos
+
+      if (itensError) {
+        console.error('Erro ao deletar itens:', itensError);
+        return false;
+      }
+
+      // Depois deleta os pedidos
+      const { error: pedidosError } = await supabase
+        .from('pedidos')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000'); // Deleta todos
+
+      if (pedidosError) {
+        console.error('Erro ao deletar pedidos:', pedidosError);
+        return false;
+      }
+
+      console.log('Pedidos e itens deletados com sucesso');
+      return true;
+    } catch (error) {
+      console.error('Erro ao limpar pedidos:', error);
+      return false;
+    }
+  },
+
+  // Exclui um pedido pendente
+  async excluir(id: string): Promise<boolean> {
+    try {
+      // console.log('Buscando pedido para excluir:', id);
+      const pedido = await this.buscarPorId(id);
+      if (!pedido || pedido.status !== 'pendente') {
+        // console.log('Pedido nao encontrado ou status nao pendente:', pedido?.status);
+        return false;
+      }
+
+      // console.log('Excluindo itens do pedido:', id);
+      await supabase.from('pedido_itens').delete().eq('pedido_id', id);
+
+      // console.log('Excluindo pedido:', id);
+      const { error } = await supabase.from('pedidos').delete().eq('id', id);
+
+      if (error) {
+        console.error('Erro ao excluir pedido:', error);
+        return false;
+      }
+
+      // console.log('Pedido excluido com sucesso');
+      return true;
+    } catch (error) {
+      console.error('Erro ao excluir pedido:', error);
+      return false;
+    }
   },
 };
