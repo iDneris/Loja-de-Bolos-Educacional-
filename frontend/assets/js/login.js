@@ -2,7 +2,6 @@ $(document).ready(function(){
     document.getElementById('btn_login').addEventListener('click', async function() {
     try {
         const resultado = await auth();
-        console.log('Login OK:', resultado);
         const redirectUrl = resultado.usuario.role === 'admin' 
           ? 'painelAdministrativo.html' 
           : '../index.html';
@@ -16,7 +15,6 @@ $(document).ready(function(){
           window.location.href = redirectUrl;
         });
     } catch (error) {
-        console.error('Erro:', error);
         Swal.fire('Erro', 'Erro no login: ' + error.message, 'error');
     }
     });

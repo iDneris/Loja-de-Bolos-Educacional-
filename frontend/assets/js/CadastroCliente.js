@@ -30,7 +30,6 @@ async function cadastrarCliente() {
   }
 
   $('#btn_cadastrar_cliente').prop('disabled', true).text('Cadastrando...');
-  console.log('Iniciando cadastro:', { nome, email, telefone });
 
   try {
     const resultado = await apiCall('/auth/registro', 'POST', {
@@ -39,8 +38,6 @@ async function cadastrarCliente() {
       senha: senha,
       telefone: telefone
     }, false);
-
-    console.log('Resposta da API:', resultado);
 
     if (resultado) {
       localStorage.setItem('token', resultado.token);

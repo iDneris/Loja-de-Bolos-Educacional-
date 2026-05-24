@@ -101,7 +101,6 @@ function renderizarProdutoUnico(produto) {
 
 async function listar_bolos() {
   const bolos = await apiCall('/bolos', 'GET');
-  console.log(bolos);
   
   renderizarCardapio(bolos);
   renderizarDestaques(bolos);
