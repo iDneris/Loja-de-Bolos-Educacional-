@@ -12,7 +12,9 @@ function atualizarAnoRodape() {
 
 // Funcao master para chamar qualquer endpoint da API
 async function apiCall(endpoint, method = 'GET', body = null, needsAuth = false) {
-  const API_URL = '';
+  // Detecta se está em produção ou desenvolvimento
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const API_URL = isLocalhost ? 'http://localhost:3001' : '';
 
   const config = {
     method: method,
