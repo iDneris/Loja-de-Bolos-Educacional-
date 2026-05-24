@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import fs from 'fs';
+import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import { config } from './configuracao/ambiente';
 import { swaggerConfig } from './configuracao/swagger';
@@ -13,6 +15,18 @@ import rotasWhatsApp from './rotas/rotasWhatsApp';
 
 const app = express();
 
+const encontrarDiretorio = (...candidatos: string[]) =>
+  candidatos.find((diretorio) => fs.existsSync(diretorio)) || candidatos[0];
+
+const diretorioPublico = encontrarDiretorio(
+  path.resolve(process.cwd(), 'backend/public'),
+  path.resolve(process.cwd(), 'public')
+);
+const diretorioFrontend = encontrarDiretorio(
+  path.resolve(process.cwd(), 'frontend'),
+  path.resolve(process.cwd(), '../frontend')
+);
+
 // Configurações básicas
 app.use(express.json());
 app.use(cors({
@@ -21,7 +35,8 @@ app.use(cors({
 }));
 
 // Servir arquivos estáticos da pasta public
-app.use(express.static('public'));
+app.use(express.static(diretorioPublico));
+app.use(express.static(diretorioFrontend));
 
 // Documentação Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig, {
@@ -39,7 +54,7 @@ app.use('/whatsapp', rotasWhatsApp);
 app.use('/teste', rotasTeste);
 
 // Rota inicial
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.json({
     mensagem: 'API A&L Cakes funcionando!',
     documentacao: '/api-docs',
@@ -50,7 +65,7 @@ app.get('/', (req, res) => {
 
 // Rota para página de teste
 app.get('/testeEndpoints.html', (req, res) => {
-  res.sendFile('testeEndpoints.html', { root: 'public' });
+  res.sendFile('testeEndpoints.html', { root: diretorioPublico });
 });
 
 // Rota não encontrada
