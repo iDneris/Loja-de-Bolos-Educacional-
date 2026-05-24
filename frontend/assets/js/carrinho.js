@@ -13,6 +13,7 @@ $(document).ready(function() {
 async function carregarCarrinho() {
   try {
     const response = await apiCall('/carrinho', 'GET', null, true);
+    console.log('Resposta carrinho:', response);
     const carrinho = response.itens || [];
     renderizarCarrinho(carrinho);
   } catch (error) {
@@ -79,19 +80,99 @@ async function removerItem(itemId) {
 }
 
 async function finalizarCompra() {
+  const emSubpasta = window.location.pathname.includes("/pages/");
+  const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+  // Verificar se carrinho tem itens
   try {
-    await apiCall('/pedidos/criar', 'POST', null, true);
-    Swal.fire({
-      title: 'Sucesso!',
-      text: 'Pedido realizado com sucesso!',
-      icon: 'success',
-      confirmButtonText: 'OK'
-    }).then(() => {
-      window.location.href = 'pedidos.html';
-    });
+    const response = await apiCall('/carrinho', 'GET', null, true);
+    const carrinho = response.itens || [];
+    if (carrinho.length === 0) {
+      Swal.fire('Atenção', 'Seu carrinho está vazio', 'warning');
+      return;
+    }
   } catch (error) {
-    console.error('Erro ao finalizar:', error);
-    Swal.fire('Erro', 'Erro ao finalizar compra: ' + error.message, 'error');
+    Swal.fire('Erro', 'Erro ao verificar carrinho', 'error');
+    return;
+  }
+
+  if (!usuario || !usuario.nome || !usuario.telefone) {
+    const { value: formValues } = await Swal.fire({
+      title: 'Finalizar Pedido',
+      html:
+        '<input id="swal-input1" class="swal2-input" placeholder="Seu Nome">' +
+        '<input id="swal-input2" class="swal2-input" placeholder="Seu Telefone">',
+      focusConfirm: false,
+      preConfirm: () => {
+        return [
+          document.getElementById('swal-input1').value,
+          document.getElementById('swal-input2').value
+        ]
+      }
+    });
+
+    if (!formValues || !formValues[0] || !formValues[1]) {
+      Swal.fire('Atenção', 'Nome e telefone são obrigatórios', 'warning');
+      return;
+    }
+
+    const [clienteNome, clienteTelefone] = formValues;
+
+    try {
+      Swal.fire({
+        title: 'Finalizando compra...',
+        text: 'Aguarde enquanto criamos seu pedido.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      await apiCall('/pedidos/criar', 'POST', { clienteNome, clienteTelefone }, true);
+      await Swal.fire({
+        title: 'Sucesso!',
+        text: 'Pedido realizado com sucesso!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+      window.location.href = emSubpasta ? 'pedidos.html' : 'pages/pedidos.html';
+    } catch (error) {
+      console.error('Erro ao finalizar:', error);
+      Swal.fire({
+        title: 'Erro',
+        text: 'Erro ao finalizar compra: ' + error.message,
+        icon: 'error'
+      });
+    }
+  } else {
+    try {
+      Swal.fire({
+        title: 'Finalizando compra...',
+        text: 'Aguarde enquanto criamos seu pedido.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      await apiCall('/pedidos/criar', 'POST', { clienteNome: usuario.nome, clienteTelefone: usuario.telefone }, true);
+      await Swal.fire({
+        title: 'Sucesso!',
+        text: 'Pedido realizado com sucesso!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+      window.location.href = emSubpasta ? 'pedidos.html' : 'pages/pedidos.html';
+    } catch (error) {
+      console.error('Erro ao finalizar:', error);
+      Swal.fire({
+        title: 'Erro',
+        text: 'Erro ao finalizar compra: ' + error.message,
+        icon: 'error'
+      });
+    }
   }
 }
 
@@ -130,10 +211,8 @@ async function adicionarAoCarrinho(boloId, quantidade = 1) {
       title: 'Adicionado!',
       text: 'Produto adicionado ao carrinho',
       icon: 'success',
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 2000
+      timer: 2000,
+      showConfirmButton: false
     });
     
     atualizarContador();
