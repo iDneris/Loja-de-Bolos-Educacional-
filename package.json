@@ -1,0 +1,9 @@
+{
+  "name": "al-cakes",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:backend": "cd backend && npm install",
+    "build:backend": "cd backend && npm run build"
+  }
+}

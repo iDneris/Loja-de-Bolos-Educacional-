@@ -5,7 +5,7 @@ $(document).ready(function(){
 
 // Função master para chamar qualquer endpoint da API
 async function apiCall(endpoint, method = 'GET', body = null, needsAuth = false) {
-  const API_URL = 'https://loja-de-bolos-educacional.vercel.app';
+  const API_URL = '';
 
   const config = {
     method: method,
