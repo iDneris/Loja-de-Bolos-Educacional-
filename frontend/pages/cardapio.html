@@ -158,17 +158,17 @@
         document.getElementById("overlay-carrinho");
 
       /* Abrir modal */
-      abrirCarrinho.addEventListener("click", () => {
+      abrirCarrinho?.addEventListener("click", () => {
         overlayCarrinho.classList.add("ativo");
       });
 
       /* Fechar modal */
-      fecharCarrinho.addEventListener("click", () => {
+      fecharCarrinho?.addEventListener("click", () => {
         overlayCarrinho.classList.remove("ativo");
       });
 
       /* Fechar clicando fora */
-      overlayCarrinho.addEventListener("click", (e) => {
+      overlayCarrinho?.addEventListener("click", (e) => {
 
         if (e.target === overlayCarrinho) {
           overlayCarrinho.classList.remove("ativo");

@@ -28,6 +28,7 @@ function carregarHeader() {
 }
 
 function atualizarUsuario() {
+  const emSubpasta = window.location.pathname.includes("/pages/");
   const usuario = JSON.parse(localStorage.getItem('usuario'));
   const token = localStorage.getItem('token');
 
@@ -50,11 +51,11 @@ function atualizarUsuario() {
     $('#admin-link').hide();
   }
 
-  $('#btn-sair').on('click', function(e) {
+  $('#btn-sair').off('click').on('click', function(e) {
     e.preventDefault();
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
-    window.location.href = EM_SUBPASTA ? '../index.html' : 'index.html';
+    window.location.href = emSubpasta ? 'login.html' : 'pages/login.html';
   });
 }
 
@@ -72,6 +73,22 @@ function inicializarHeader() {
   $(document).on('click', function(e) {
     if (!$(e.target).closest('.usuario-navbar').length) {
       $('#dropdown-usuario').removeClass('ativo');
+    }
+  });
+
+  $(document).off('click.alCakesCart', '#abrir-carrinho').on('click.alCakesCart', '#abrir-carrinho', function(e) {
+    e.preventDefault();
+    $('#overlay-carrinho').addClass('ativo');
+  });
+
+  $(document).off('click.alCakesCartClose', '#fechar-carrinho').on('click.alCakesCartClose', '#fechar-carrinho', function(e) {
+    e.preventDefault();
+    $('#overlay-carrinho').removeClass('ativo');
+  });
+
+  $(document).off('click.alCakesCartOverlay', '#overlay-carrinho').on('click.alCakesCartOverlay', '#overlay-carrinho', function(e) {
+    if (e.target === this) {
+      $('#overlay-carrinho').removeClass('ativo');
     }
   });
 }

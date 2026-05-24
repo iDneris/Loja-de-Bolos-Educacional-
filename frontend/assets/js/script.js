@@ -146,29 +146,21 @@ function validarEmail(email) {
    DROPDOWN USUÁRIO
 ========================================================= */
 
-const usuarioBtn =
-  document.getElementById("usuario-btn");
+document.addEventListener("DOMContentLoaded", () => {
+  const usuarioBtn = document.getElementById("usuario-btn");
+  const dropdownUsuario = document.getElementById("dropdown-usuario");
 
-const dropdownUsuario =
-  document.getElementById("dropdown-usuario");
+  if (!usuarioBtn || !dropdownUsuario) return;
 
-usuarioBtn.addEventListener("click", () => {
+  usuarioBtn.addEventListener("click", () => {
+    dropdownUsuario.classList.toggle("ativo");
+  });
 
-  dropdownUsuario.classList.toggle("ativo");
-
-});
-
-document.addEventListener("click", (e) => {
-
-  if(
-    !usuarioBtn.contains(e.target) &&
-    !dropdownUsuario.contains(e.target)
-  ){
-
-    dropdownUsuario.classList.remove("ativo");
-
-  }
-
+  document.addEventListener("click", (e) => {
+    if (!usuarioBtn.contains(e.target) && !dropdownUsuario.contains(e.target)) {
+      dropdownUsuario.classList.remove("ativo");
+    }
+  });
 });
 
 /* =========================================================
