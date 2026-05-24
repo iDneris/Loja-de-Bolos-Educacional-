@@ -210,7 +210,18 @@
       });
     });
 
+    function limparSessaoERedirecionar() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      window.location.href = 'login.html';
+    }
+
     async function carregarDados() {
+      if (!localStorage.getItem('token')) {
+        limparSessaoERedirecionar();
+        return;
+      }
+
       try {
         const usuario = await apiCall('/auth/me', 'GET', null, true);
         usuarioId = usuario.id;
@@ -220,7 +231,8 @@
         const dataCriacao = new Date(usuario.criado_em).toLocaleDateString('pt-BR');
         $('#info-criacao').html('Conta criada em: <strong>' + dataCriacao + '</strong>');
       } catch (error) {
-        Swal.fire('Erro', 'Faca login para acessar seus dados.', 'error');
+        await Swal.fire('Sessao expirada', 'Faca login novamente para acessar seus dados.', 'warning');
+        limparSessaoERedirecionar();
       }
     }
 
