@@ -1,4 +1,4 @@
-const API_URL = 'https://loja-de-bolos-educacional.vercel.app';
+const API_URL = 'https://alcakes.vercel.app';
 
 const produtos = [
   {

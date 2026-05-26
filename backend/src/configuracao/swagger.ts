@@ -14,7 +14,7 @@ const opcoes: swaggerJsdoc.Options = {
         description: 'Servidor local',
       },
       {
-        url: 'https://loja-de-bolos-educacional.vercel.app',
+        url: 'https://alcakes.vercel.app',
         description: 'Servidor de produção',
       },
     ],
