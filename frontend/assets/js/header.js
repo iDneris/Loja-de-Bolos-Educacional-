@@ -78,6 +78,9 @@ function inicializarHeader() {
   $(document).off('click.alCakesCart', '#abrir-carrinho').on('click.alCakesCart', '#abrir-carrinho', function(e) {
     e.preventDefault();
     $('#overlay-carrinho').addClass('ativo');
+    if (typeof carregarCarrinho === 'function') {
+      carregarCarrinho();
+    }
   });
 
   $(document).off('click.alCakesCartClose', '#fechar-carrinho').on('click.alCakesCartClose', '#fechar-carrinho', function(e) {
