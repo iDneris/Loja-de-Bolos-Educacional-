@@ -100,11 +100,22 @@ function renderizarProdutoUnico(produto) {
 }
 
 async function listar_bolos() {
+  const skeletonGrid = document.getElementById('skeleton-grid');
+  const produtosGrid = document.getElementById('grid-produtos');
+
+  // Mostra skeleton, esconde grid
+  if (skeletonGrid) skeletonGrid.classList.remove('hidden');
+  if (produtosGrid) produtosGrid.style.display = 'none';
+
   const bolos = await apiCall('/bolos', 'GET');
-  
+
+  // Esconde skeleton, mostra grid
+  if (skeletonGrid) skeletonGrid.classList.add('hidden');
+  if (produtosGrid) produtosGrid.style.display = 'grid';
+
   renderizarCardapio(bolos);
   renderizarDestaques(bolos);
-  
+
   return bolos;
 }
 
