@@ -1,4 +1,4 @@
-// Carregar footer master em todas as páginas
+﻿// Carregar footer master em todas as páginas
 $(document).ready(function() {
   carregarFooter();
 });

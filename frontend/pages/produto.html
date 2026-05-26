@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!-- A&L Cakes - Página individual de produto (recebe ?id=... via URL) -->
 <html lang="pt-BR">
 <head>
@@ -11,104 +11,10 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-
-  <!-- ===== NAVBAR ===== -->
-  <header class="navbar">
-    <div class="nav-container">
-      <img src="../assets/images/alcakes_logo.png" alt="" style="width: 4.5%; border-radius: 50%;">
-      <a href="../index.html" class="logo">A&L<span> Cakes</span></a>
-      <button class="hamburguer" aria-label="Abrir menu"><span></span><span></span><span></span></button>
-      <nav>
-          <ul class="nav-menu">
-
-            <li>
-              <a href="../index.html">
-                Início
-              </a>
-            </li>
-
-            <li>
-              <a href="cardapio.html">
-                Cardápio
-              </a>
-            </li>
-
-            <li>
-              <a href="blog.html">
-                Blog
-              </a>
-            </li>
-
-            <li>
-              <a href="sobre.html">
-                Sobre
-              </a>
-            </li>
-
-            <li>
-              <a href="painelAdministrativo.html">
-                Painel Administrativo
-              </a>
-            </li>
-
-            <!-- LOGIN -->
-            <li>
-
-              <a href="login.html"
-                class="btn-login">
-
-                Entrar
-
-              </a>
-
-            </li>
-
-            <!-- CARRINHO -->
-            <li>
-              <button class="btn-carrinho" id="abrir-carrinho">
-                <span class="icone-carrinho" aria-hidden="true">🛒</span>
-                <span class="contador-carrinho" id="contador-carrinho">0</span>
-              </button>
-            </li>
-
-            <!-- USUÁRIO -->
-            <li class="usuario-navbar">
-
-              <button class="usuario-btn"
-                id="usuario-btn">
-
-                Olá, Cliente
-
-              </button>
-
-              <!-- DROPDOWN -->
-              <div class="dropdown-usuario"
-                id="dropdown-usuario">
-
-                <a href="meusdados.html">
-                  Meus Dados
-                </a>
-
-                <a href="pedidos.html">
-                  Meus Pedidos
-                </a>
-
-                <a href="#">
-                  Sair
-                </a>
-
-              </div>
-
-            </li>
-
-          </ul>
-      </nav>
-    </div>
-  </header>
-
-  <!-- ===== DETALHE DO PRODUTO (renderizado via JS) ===== -->
+  <!-- Header será carregado dinamicamente via header.js -->
+<!-- ===== DETALHE DO PRODUTO (renderizado via JS) ===== -->
   <main class="container">
-    <a href="cardapio.html" style="display:inline-block; margin-bottom:1.5rem; color:var(--rosa-escuro);">← Voltar ao cardápio</a>
+    <a href="cardapio.html" style="display:inline-block; margin-bottom:1.5rem; color:var(--rosa-escuro);">&larr; Voltar ao cardápio</a>
     <div class="produto-detalhe" id="detalhe-produto"></div>
   </main>
 

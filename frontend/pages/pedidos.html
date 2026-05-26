@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!-- A&L Cakes - Meus Pedidos -->
 <html lang="pt-BR">
 <head>
@@ -15,6 +15,8 @@
 
 <body>
 
+  <!-- Header será carregado dinamicamente via header.js -->
+
   <main>
 
     <div class="form-container pedidos-container">
@@ -22,7 +24,7 @@
       <h2>Meus Pedidos</h2>
 
       <p class="subtitulo">
-        Historico de compras realizadas no site
+        Histórico de compras realizadas no site
       </p>
 
       <div id="lista-pedidos">
@@ -87,8 +89,22 @@
         renderizarPedidos(pedidos);
       } catch (error) {
         console.error('Erro ao carregar pedidos:', error);
-        $('#lista-pedidos').html('<p style="text-align:center;color:var(--texto-claro);">Faca login para ver seus pedidos.</p>');
+        $('#lista-pedidos').html('<p style="text-align:center;color:var(--texto-claro);">Faça login para ver seus pedidos.</p>');
       }
+    }
+
+    function formatarStatusPedido(status) {
+      const labels = {
+        pendente: 'Pendente',
+        confirmado: 'Confirmado',
+        em_preparo: 'Em preparo',
+        pronto_retirada: 'Pronto para retirada',
+        saiu_entrega: 'Saiu para entrega',
+        entregue: 'Entregue',
+        cancelado: 'Cancelado',
+        enviado: 'Saiu para entrega'
+      };
+      return labels[status] || 'Pendente';
     }
 
     function renderizarPedidos(pedidos) {
@@ -113,8 +129,8 @@
         // Usa numero_pedido se disponível, senão usa ID truncado
         const numeroPedido = p.numero_pedido || p.id.substring(0, 8);
         
-        const statusClass = p.status === 'concluido' ? 'concluido' : 'pendente';
-        const statusTexto = p.status ? p.status.charAt(0).toUpperCase() + p.status.slice(1) : 'Pendente';
+        const statusClass = (p.status || 'pendente').replace(/_/g, '-');
+        const statusTexto = formatarStatusPedido(p.status);
 
         const itensHtml = p.itens ? p.itens.map(item => `
           <div class="pedido-produto">
@@ -134,7 +150,7 @@
                 <p>${data}</p>
                 <p>Status: <strong class="status-pedido ${statusClass}">${statusTexto}</strong></p>
               </div>
-              ${p.status === 'pendente' ? `<button class="btn-excluir-pedido" data-id="${p.id}" title="Excluir pedido" style="border:none;background:transparent;color:#d32f2f;font-size:28px;cursor:pointer;padding:5px;">🗑</button>` : ''}
+              ${p.status === 'pendente' ? `<button class="btn-excluir-pedido" data-id="${p.id}" title="Cancelar pedido" style="border:none;background:transparent;color:#d32f2f;font-size:13px;cursor:pointer;padding:5px;">Cancelar pedido</button>` : ''}
             </div>
             ${itensHtml}
           </div>
@@ -145,24 +161,24 @@
     $(document).on('click', '.btn-excluir-pedido', async function() {
       const id = $(this).data('id');
       const result = await Swal.fire({
-        title: 'Excluir pedido?',
-        text: 'Esta acao nao pode ser desfeita.',
+        title: 'Cancelar pedido?',
+        text: 'O pedido será marcado como cancelado e a loja será avisada.',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Sim, excluir',
+        confirmButtonText: 'Sim, cancelar',
         cancelButtonText: 'Cancelar'
       });
 
       if (result.isConfirmed) {
         try {
-          // console.log('Excluindo pedido:', id);
+          // console.log('Cancelando pedido:', id);
           await apiCall(`/pedidos/${id}`, 'DELETE', null, true);
-          // console.log('Pedido excluido, recarregando...');
-          await Swal.fire('Excluido!', 'Pedido excluido com sucesso.', 'success');
+          // console.log('Pedido cancelado, recarregando...');
+          await Swal.fire('Cancelado!', 'Pedido cancelado com sucesso.', 'success');
           carregarPedidos();
         } catch (error) {
           // console.error('Erro ao excluir:', error);
-          Swal.fire('Erro!', 'Nao foi possivel excluir o pedido.', 'error');
+          Swal.fire('Erro!', 'Não foi possível cancelar o pedido.', 'error');
         }
       }
     });

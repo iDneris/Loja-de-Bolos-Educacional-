@@ -1,8 +1,9 @@
-<!-- HEADER MASTER -->
+﻿<!-- HEADER MASTER -->
 <header class="navbar">
   <div class="nav-container">
     <img src="assets/images/alcakes_logo.png" alt="" style="width: 4.5%; border-radius: 50%;">
     <a href="index.html" class="logo">A&L<span> Cakes</span></a>
+    <button class="btn-notificacoes-mobile" id="abrir-notificacoes-mobile" aria-label="Notificacoes"><span aria-hidden="true">&#128276;</span><span class="contador-notificacoes" id="contador-notificacoes-mobile">0</span></button>
     <button class="hamburguer" aria-label="Abrir menu"><span></span><span></span><span></span></button>
     <nav>
       <ul class="nav-menu">
@@ -18,11 +19,20 @@
           </div>
         </li>
 
+        <!-- NOTIFICACOES -->
+        <li class="notificacoes-row">
+          <button class="btn-notificacoes" id="abrir-notificacoes">
+            <span class="texto-notificacoes-mobile">Notificacoes</span>
+            <span class="icone-notificacoes" aria-hidden="true">&#128276;</span>
+            <span class="contador-notificacoes" id="contador-notificacoes">0</span>
+          </button>
+        </li>
+
         <!-- CARRINHO -->
         <li class="carrinho-row">
           <button class="btn-carrinho" id="abrir-carrinho">
             <span class="texto-carrinho-mobile">Carrinho</span>
-            <span class="icone-carrinho" aria-hidden="true">🛒</span>
+            <span class="icone-carrinho" aria-hidden="true">&#128722;</span>
             <span class="contador-carrinho" id="contador-carrinho">0</span>
           </button>
         </li>
@@ -31,7 +41,7 @@
         <li class="usuario-navbar" id="usuario-navbar-container" style="display: none;">
           <button class="usuario-btn" id="usuario-btn">
             Ola, <span id="usuario-nome">Cliente</span>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left: 5px;">
+            <svg class="usuario-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
               <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
