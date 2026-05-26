@@ -176,6 +176,114 @@ USING (
 
 Para projeto academico, e mais que suficiente.
 
+## Executando DDL (ALTER TABLE, CREATE COLUMN, etc.) via Codigo
+
+### Limitacao da REST API
+
+**O Supabase NAO permite comandos DDL** (ALTER TABLE, CREATE FUNCTION, DROP COLUMN, etc.) via REST API ou `supabase.rpc()`. Qualquer tentativa resultara em erros como:
+- `Could not find the function public.exec_sql(sql) in the schema cache`
+- `Could not find the table 'public.sql' in the schema cache`
+
+Isso e uma limitacao de seguranca da plataforma.
+
+### Solucao: Conexao Direta PostgreSQL
+
+Use o pacote `pg` para conectar diretamente ao banco e executar SQL arbitario.
+
+#### 1. Verificar se o pacote `pg` esta instalado
+
+```bash
+cd backend
+npm ls pg
+```
+
+Se nao estiver, instale:
+```bash
+npm install pg
+```
+
+#### 2. Montar a URL de Conexao
+
+A URL de conexao usa as variaveis do `.env`:
+
+```javascript
+const projectRef = process.env.SUPABASE_URL.match(/https:\/\/([^.]+)/)[1];
+const dbPassword = process.env.SUPABASE_DB_PASSWORD;
+const encodedPassword = encodeURIComponent(dbPassword);
+
+// URL de conexao direta (sempre funciona)
+const connectionString = `postgresql://postgres:${encodedPassword}@db.${projectRef}.supabase.co:5432/postgres`;
+```
+
+#### 3. Executar SQL
+
+```javascript
+const { Pool } = require('pg');
+
+async function executarSQL(sql) {
+  const pool = new Pool({ 
+    connectionString, 
+    ssl: { rejectUnauthorized: false } 
+  });
+  
+  try {
+    const client = await pool.connect();
+    try {
+      await client.query(sql);
+      console.log('SQL executado com sucesso!');
+    } finally {
+      client.release();
+    }
+  } finally {
+    await pool.end();
+  }
+}
+
+// Exemplo: adicionar coluna
+executarSQL('ALTER TABLE bolos ADD COLUMN IF NOT EXISTS sob_encomenda BOOLEAN DEFAULT TRUE;');
+```
+
+### Script de Exemplo Real
+
+Veja o script funcional em:
+- `backend/scripts/add-sob-encomenda-v2.js` - Adiciona coluna `sob_encomenda` na tabela `bolos`
+
+Este script:
+1. Le as variaveis do `.env`
+2. Monta a URL de conexao PostgreSQL
+3. Conecta via `pg.Pool` com SSL
+4. Executa o SQL e verifica o resultado
+
+### Alternativa Manual
+
+Se a conexao direta falhar, execute o SQL manualmente no painel do Supabase:
+1. Acesse https://supabase.com/dashboard
+2. Selecione o projeto
+3. Va em **SQL Editor**
+4. Cole e execute o SQL
+
+### Comandos DDL Comuns
+
+```sql
+-- Adicionar coluna
+ALTER TABLE bolos ADD COLUMN IF NOT EXISTS sob_encomenda BOOLEAN DEFAULT TRUE;
+
+-- Renomear coluna
+ALTER TABLE bolos RENAME COLUMN nome_antigo TO nome_novo;
+
+-- Remover coluna
+ALTER TABLE bolos DROP COLUMN IF EXISTS coluna_obsoleta;
+
+-- Alterar tipo da coluna
+ALTER TABLE bolos ALTER COLUMN preco TYPE NUMERIC(12, 2);
+
+-- Adicionar constraint
+ALTER TABLE bolos ADD CONSTRAINT preco_positivo CHECK (preco > 0);
+
+-- Criar indice
+CREATE INDEX IF NOT EXISTS idx_bolos_nome ON bolos(nome);
+```
+
 ## Troubleshooting
 
 ### Erro: "relation does not exist"

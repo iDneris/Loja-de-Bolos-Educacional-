@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+﻿import { Request, Response } from 'express';
 import { servicoUsuario } from '../servicos/servicoUsuario';
 
 export const controladorUsuario = {
@@ -14,8 +14,8 @@ export const controladorUsuario = {
 
     // Verifica se usuario pode acessar
     if (req.usuario?.role !== 'admin' && req.usuario?.id !== id) {
-      return res.status(403).json({ 
-        mensagem: 'Sem permissao para acessar dados de outro usuario' 
+      return res.status(403).json({
+        mensagem: 'Sem permissao para acessar dados de outro usuario'
       });
     }
 
@@ -34,8 +34,8 @@ export const controladorUsuario = {
 
     // Verifica se usuario pode atualizar
     if (req.usuario?.role !== 'admin' && req.usuario?.id !== id) {
-      return res.status(403).json({ 
-        mensagem: 'Sem permissao para atualizar dados de outro usuario' 
+      return res.status(403).json({
+        mensagem: 'Sem permissao para atualizar dados de outro usuario'
       });
     }
 
@@ -54,9 +54,17 @@ export const controladorUsuario = {
     return res.json(usuario);
   },
 
-  // DELETE /usuarios/:id - Deleta usuario (admin)
+  // DELETE /usuarios/:id - Deleta usuario (admin ou proprio usuario)
   async deletar(req: Request, res: Response) {
     const { id } = req.params;
+
+    if (!req.usuario) {
+      return res.status(401).json({ mensagem: 'Nao autenticado' });
+    }
+
+    if (req.usuario.role !== 'admin' && req.usuario.id !== id) {
+      return res.status(403).json({ mensagem: 'Sem permissao para acessar este recurso' });
+    }
 
     const sucesso = await servicoUsuario.deletar(id);
 

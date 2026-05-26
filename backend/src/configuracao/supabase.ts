@@ -18,7 +18,7 @@ if (supabaseKeys) {
 
 // Valida se as credenciais foram configuradas
 if (!supabaseUrl || !supabaseKey) {
-  console.error('❌ ERRO: Configure SUPABASE_URL e SUPABASE_KEYS (ou SUPABASE_SERVICE_ROLE_KEY) no arquivo .env');
+  console.error('ERRO: Configure SUPABASE_URL e SUPABASE_KEYS (ou SUPABASE_SERVICE_ROLE_KEY) no arquivo .env');
   process.exit(1);
 }
 

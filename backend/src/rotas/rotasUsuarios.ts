@@ -1,4 +1,4 @@
-import { Router } from 'express';
+﻿import { Router } from 'express';
 import { controladorUsuario } from '../controladores/controladorUsuario';
 import { autenticacao } from '../middlewares/autenticacao';
 import { autorizacao } from '../middlewares/autorizacao';
@@ -17,7 +17,7 @@ router.get('/:id', controladorUsuario.buscarPorId);
 // PUT /usuarios/:id - Atualiza (admin ou proprio usuario)
 router.put('/:id', controladorUsuario.atualizar);
 
-// DELETE /usuarios/:id - Deleta (admin)
-router.delete('/:id', autorizacao(['admin']), controladorUsuario.deletar);
+// DELETE /usuarios/:id - Deleta (admin ou proprio usuario)
+router.delete('/:id', controladorUsuario.deletar);
 
 export default router;
