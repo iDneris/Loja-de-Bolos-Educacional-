@@ -2409,3 +2409,82 @@ img {
     margin-right: 0.3rem;
   }
 }
+
+/* -------- Skeleton Loading -------- */
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  width: min(calc(100vw - 3rem), 1200px);
+  margin: 2rem auto 0;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 900px) {
+  .skeleton-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .skeleton-grid {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
+}
+
+.skeleton-card {
+  background-color: var(--branco);
+  border-radius: var(--raio);
+  overflow: hidden;
+  box-shadow: var(--sombra-leve);
+  display: flex;
+  flex-direction: column;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-card::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-card::after {
+  content: '';
+  display: block;
+  padding: 1.2rem 1.4rem 1.5rem;
+  flex: 1;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  mask-image: linear-gradient(transparent 0%, black 10%, black 30%, transparent 35%, transparent 45%, black 50%, black 70%, transparent 75%);
+  -webkit-mask-image: linear-gradient(transparent 0%, black 10%, black 30%, transparent 35%, transparent 45%, black 50%, black 70%, transparent 75%);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.skeleton-grid.hidden {
+  display: none;
+}
