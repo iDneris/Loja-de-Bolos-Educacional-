@@ -1,4 +1,4 @@
-import { supabase } from '../configuracao/supabase';
+﻿import { supabase } from '../configuracao/supabase';
 import { CarrinhoItemComBolo, DadosAdicionarCarrinho } from '../tipos/Carrinho';
 import { servicoBolo } from './servicoBolo';
 
@@ -168,13 +168,13 @@ export const servicoCarrinho = {
         return null;
       }
 
-      // Valida estoque
-      if (item.bolos.estoque < quantidade) {
-        console.error('Estoque insuficiente');
-        return null;
+      // Valida estoque apenas quando houver controle de estoque (> 0)
+      if (item.bolos?.estoque !== null && item.bolos?.estoque !== undefined && item.bolos.estoque > 0) {
+        if (item.bolos.estoque < quantidade) {
+          console.error('Estoque insuficiente');
+          return null;
+        }
       }
-
-      // Atualiza quantidade
       const { data, error } = await supabase
         .from('carrinho_itens')
         .update({ 

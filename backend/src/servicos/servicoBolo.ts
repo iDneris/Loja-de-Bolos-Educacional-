@@ -81,12 +81,21 @@ export const servicoBolo = {
     return true;
   },
 
-  // Reduz o estoque quando faz pedido
+  // Reduz o estoque quando faz pedido (pula se sob_encomenda)
   async reduzirEstoque(boloId: string, quantidade: number): Promise<boolean> {
     // Busca o bolo atual
     const bolo = await this.buscarPorId(boloId);
     
-    if (!bolo || bolo.estoque < quantidade) {
+    if (!bolo) {
+      return false;
+    }
+
+    // Se for sob encomenda, nao controla estoque
+    if (bolo.sob_encomenda) {
+      return true;
+    }
+
+    if (bolo.estoque < quantidade) {
       return false;
     }
 

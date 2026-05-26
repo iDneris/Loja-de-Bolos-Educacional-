@@ -1,8 +1,34 @@
-import { Pedido, ItemPedido } from '../tipos/Pedido';
+﻿import { Pedido, ItemPedido, PedidoStatus } from '../tipos/Pedido';
 import { servicoBolo } from './servicoBolo';
 import { servicoCliente } from './servicoCliente';
 import { servicoCarrinho } from './servicoCarrinho';
 import { supabase } from '../configuracao/supabase';
+const STATUS_FLOW: Record<PedidoStatus, PedidoStatus[]> = {
+  pendente: ['confirmado', 'cancelado'],
+  confirmado: ['em_preparo', 'cancelado'],
+  em_preparo: ['pronto_retirada', 'saiu_entrega', 'cancelado'],
+  pronto_retirada: ['entregue', 'cancelado'],
+  saiu_entrega: ['entregue', 'cancelado'],
+  entregue: [],
+  cancelado: [],
+};
+
+const STATUS_ALIAS: Record<string, PedidoStatus> = {
+  pendente: 'pendente',
+  confirmado: 'confirmado',
+  em_preparo: 'em_preparo',
+  preparando: 'em_preparo',
+  pronto_retirada: 'pronto_retirada',
+  pronto: 'pronto_retirada',
+  enviado: 'saiu_entrega',
+  saiu_entrega: 'saiu_entrega',
+  entregue: 'entregue',
+  cancelado: 'cancelado',
+};
+
+function normalizarStatus(status: string): PedidoStatus | null {
+  return STATUS_ALIAS[status] || null;
+}
 
 export const servicoPedido = {
   // Cria um pedido a partir do carrinho do usuario
@@ -10,6 +36,7 @@ export const servicoPedido = {
     try {
       // 1. Busca itens do carrinho
       const itensCarrinho = await servicoCarrinho.listar(usuarioId);
+      console.log('Itens do carrinho:', itensCarrinho.length, 'usuario:', usuarioId);
 
       if (itensCarrinho.length === 0) {
         console.error('Carrinho vazio');
@@ -21,13 +48,14 @@ export const servicoPedido = {
         nome: clienteNome,
         telefone: clienteTelefone,
       });
+      console.log('Cliente:', cliente?.id, cliente?.nome);
 
       if (!cliente) {
         console.error('Erro ao buscar/criar cliente');
         return null;
       }
 
-      // 3. Valida estoque de todos os itens
+      // 3. Valida estoque de todos os itens (pula se sob_encomenda)
       for (const item of itensCarrinho) {
         const bolo = await servicoBolo.buscarPorId(item.bolo_id);
         
@@ -36,7 +64,8 @@ export const servicoPedido = {
           return null;
         }
 
-        if (bolo.estoque < item.quantidade) {
+        // So valida estoque se NAO for sob encomenda
+        if (!bolo.sob_encomenda && bolo.estoque < item.quantidade) {
           console.error(`Estoque insuficiente para ${bolo.nome}`);
           return null;
         }
@@ -118,7 +147,7 @@ export const servicoPedido = {
         clienteTelefone: cliente.telefone,
         itens: itensPedido,
         total: valorTotal,
-        status: pedidoData.status,
+        status: normalizarStatus(pedidoData.status) || 'pendente',
         data: new Date(pedidoData.criado_em),
       };
 
@@ -201,7 +230,7 @@ export const servicoPedido = {
           clienteTelefone: p.clientes?.telefone,
           itens,
           total: p.total,
-          status: p.status,
+          status: normalizarStatus(p.status) || 'pendente',
           data: new Date(p.criado_em),
           criado_em: p.criado_em,
         };
@@ -274,7 +303,7 @@ export const servicoPedido = {
       clienteTelefone: pedidoData.clientes?.telefone,
       itens,
       total: pedidoData.total,
-      status: pedidoData.status,
+      status: normalizarStatus(pedidoData.status) || 'pendente',
       data: new Date(pedidoData.criado_em),
     };
   },
@@ -337,7 +366,7 @@ export const servicoPedido = {
           clienteTelefone: p.clientes?.telefone,
           itens,
           total: p.total,
-          status: p.status,
+          status: normalizarStatus(p.status) || 'pendente',
           data: new Date(p.criado_em),
           criado_em: p.criado_em,
         };
@@ -382,6 +411,35 @@ export const servicoPedido = {
     return mensagem;
   },
 
+
+  async atualizarStatus(id: string, novoStatusRaw: string): Promise<Pedido | null> {
+    const novoStatus = normalizarStatus(String(novoStatusRaw || '').trim());
+    if (!novoStatus) return null;
+
+    const pedido = await this.buscarPorId(id);
+    if (!pedido) return null;
+
+    const atual = normalizarStatus(pedido.status);
+    if (!atual) return null;
+
+    if (atual === novoStatus) return pedido;
+
+    if (!STATUS_FLOW[atual].includes(novoStatus)) {
+      return null;
+    }
+
+    const { error } = await supabase
+      .from('pedidos')
+      .update({ status: novoStatus })
+      .eq('id', id);
+
+    if (error) {
+      console.error('Erro ao atualizar status do pedido:', error);
+      return null;
+    }
+
+    return this.buscarPorId(id);
+  },
   // Limpa todos os pedidos (apenas para desenvolvimento)
   async limparTodos(): Promise<boolean> {
     try {
@@ -415,31 +473,27 @@ export const servicoPedido = {
     }
   },
 
-  // Exclui um pedido pendente
+  // Cancela um pedido pendente sem apagar o historico
   async excluir(id: string): Promise<boolean> {
     try {
-      // console.log('Buscando pedido para excluir:', id);
       const pedido = await this.buscarPorId(id);
       if (!pedido || pedido.status !== 'pendente') {
-        // console.log('Pedido nao encontrado ou status nao pendente:', pedido?.status);
         return false;
       }
 
-      // console.log('Excluindo itens do pedido:', id);
-      await supabase.from('pedido_itens').delete().eq('pedido_id', id);
-
-      // console.log('Excluindo pedido:', id);
-      const { error } = await supabase.from('pedidos').delete().eq('id', id);
+      const { error } = await supabase
+        .from('pedidos')
+        .update({ status: 'cancelado' })
+        .eq('id', id);
 
       if (error) {
-        console.error('Erro ao excluir pedido:', error);
+        console.error('Erro ao cancelar pedido:', error);
         return false;
       }
 
-      // console.log('Pedido excluido com sucesso');
       return true;
     } catch (error) {
-      console.error('Erro ao excluir pedido:', error);
+      console.error('Erro ao cancelar pedido:', error);
       return false;
     }
   },

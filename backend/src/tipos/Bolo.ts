@@ -6,6 +6,7 @@ export interface Bolo {
   preco: number;
   imagem_url: string;
   estoque: number;
+  sob_encomenda: boolean;
 }
 
 // Dados para cadastrar bolo novo
@@ -15,6 +16,7 @@ export interface DadosNovoBolo {
   preco: number;
   imagem_url: string;
   estoque: number;
+  sob_encomenda?: boolean;
 }
 
 // Dados para atualizar bolo
@@ -24,4 +26,5 @@ export interface DadosAtualizarBolo {
   preco?: number;
   imagem_url?: string;
   estoque?: number;
+  sob_encomenda?: boolean;
 }
