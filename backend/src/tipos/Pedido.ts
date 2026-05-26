@@ -1,4 +1,4 @@
-// Item do pedido (relacionamento com bolo)
+﻿// Item do pedido (relacionamento com bolo)
 export interface ItemPedido {
   id?: string;
   pedidoId?: string;
@@ -8,6 +8,15 @@ export interface ItemPedido {
   precoUnitario: number;
 }
 
+export type PedidoStatus =
+  | 'pendente'
+  | 'confirmado'
+  | 'em_preparo'
+  | 'pronto_retirada'
+  | 'saiu_entrega'
+  | 'entregue'
+  | 'cancelado';
+
 // Dados do pedido completo
 export interface Pedido {
   id: string;
@@ -16,7 +25,7 @@ export interface Pedido {
   clienteNome?: string;
   clienteTelefone?: string;
   total: number;
-  status: 'pendente' | 'confirmado' | 'enviado';
+  status: PedidoStatus;
   itens?: ItemPedido[];
   data: Date;
 }

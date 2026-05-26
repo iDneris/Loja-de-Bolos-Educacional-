@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+﻿import { Request, Response } from 'express';
 import { servicoPedido } from '../servicos/servicoPedido';
 
 export const controladorPedido = {
@@ -21,8 +21,8 @@ export const controladorPedido = {
     );
 
     if (!novoPedido) {
-      return res.status(400).json({ 
-        mensagem: 'Nao foi possivel criar o pedido. Verifique se o carrinho tem itens e se ha estoque' 
+      return res.status(400).json({
+        mensagem: 'Nao foi possivel criar o pedido. Verifique se o carrinho tem itens e se ha estoque'
       });
     }
 
@@ -37,7 +37,7 @@ export const controladorPedido = {
 
     const isAdmin = req.usuario.role === 'admin';
     const pedidos = await servicoPedido.listarTodos(req.usuario.id, isAdmin);
-    
+
     res.status(200).json(pedidos);
   },
 
@@ -51,6 +51,32 @@ export const controladorPedido = {
     }
 
     res.status(200).json(pedido);
+  },
+
+  // PATCH /pedidos/:id/status - Atualiza status de pedido
+  async atualizarStatus(req: Request, res: Response) {
+    if (!req.usuario) {
+      return res.status(401).json({ mensagem: 'Usuario nao autenticado' });
+    }
+
+    if (req.usuario.role !== 'admin' && req.usuario.role !== 'colaborador') {
+      return res.status(403).json({ mensagem: 'Acesso negado' });
+    }
+
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ mensagem: 'Status e obrigatorio' });
+    }
+
+    const pedidoAtualizado = await servicoPedido.atualizarStatus(id, status);
+
+    if (!pedidoAtualizado) {
+      return res.status(400).json({ mensagem: 'Transicao de status invalida ou pedido nao encontrado' });
+    }
+
+    return res.status(200).json(pedidoAtualizado);
   },
 
   // GET /pedidos/:id/whatsapp - Gera mensagem para WhatsApp
@@ -76,18 +102,15 @@ export const controladorPedido = {
     res.status(200).json({ mensagem: 'Pedidos limpos com sucesso' });
   },
 
-  // DELETE /pedidos/:id - Exclui um pedido pendente
+  // DELETE /pedidos/:id - Cancela um pedido pendente
   async excluir(req: Request, res: Response) {
-    // console.log('Controller excluir chamado, ID:', req.params.id);
     const { id } = req.params;
     const sucesso = await servicoPedido.excluir(id);
 
     if (!sucesso) {
-      // console.log('Exclusão falhou no serviço');
-      return res.status(400).json({ mensagem: 'Pedido nao pode ser excluido' });
+      return res.status(400).json({ mensagem: 'Pedido nao pode ser cancelado' });
     }
 
-    // console.log('Exclusão bem sucedida');
-    res.status(200).json({ mensagem: 'Pedido excluido com sucesso' });
+    res.status(200).json({ mensagem: 'Pedido cancelado com sucesso' });
   },
 };
