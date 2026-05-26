@@ -6,6 +6,7 @@ export const controladorBolo = {
   // GET /bolos - Lista todos os bolos
   async listar(req: Request, res: Response) {
     const bolos = await servicoBolo.listarTodos();
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
     res.status(200).json(bolos);
   },
 

@@ -12,45 +12,52 @@ function atualizarAnoRodape() {
 
 // Detecta qual porta da API está disponível
 let API_URL_DETECTADA = null;
-let detectando = false;
 let promessaDeteccao = null;
 
 async function detectarPortaAPI() {
   if (API_URL_DETECTADA !== null) return;
-  
-  if (detectando && promessaDeteccao) {
+
+  if (promessaDeteccao) {
     await promessaDeteccao;
     return;
   }
-  
-  detectando = true;
+
   promessaDeteccao = (async () => {
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    
+
     if (!isLocalhost) {
       API_URL_DETECTADA = '';
       return;
     }
 
-    const portas = [3001, 3000];
-    
-    for (const porta of portas) {
-      try {
-        const response = await fetch(`http://localhost:${porta}/bolos`, { method: 'HEAD' });
-        if (response.ok || response.status === 404 || response.status === 401) {
-          API_URL_DETECTADA = `http://localhost:${porta}`;
-          return;
-        }
-      } catch (error) {
-        // Porta não disponível, tenta a próxima
-      }
+    // Checa cache da sessão para não redetectar a cada página
+    const cached = sessionStorage.getItem('api_url');
+    if (cached !== null) {
+      API_URL_DETECTADA = cached;
+      return;
     }
-    
-    API_URL_DETECTADA = 'http://localhost:3000';
+
+    // Testa as portas em paralelo — vence a que responder primeiro
+    const portas = [3000, 3001];
+    try {
+      const portaVencedora = await Promise.any(
+        portas.map((porta) =>
+          fetch(`http://localhost:${porta}/bolos`, { method: 'HEAD' })
+            .then((res) => {
+              if (res.ok || res.status === 404 || res.status === 401) return porta;
+              throw new Error('status inválido');
+            })
+        )
+      );
+      API_URL_DETECTADA = `http://localhost:${portaVencedora}`;
+    } catch {
+      API_URL_DETECTADA = 'http://localhost:3000';
+    }
+
+    sessionStorage.setItem('api_url', API_URL_DETECTADA);
   })();
-  
+
   await promessaDeteccao;
-  detectando = false;
 }
 
 // Funcao master para chamar qualquer endpoint da API

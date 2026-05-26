@@ -1,5 +1,18 @@
 {
   "buildCommand": "cd backend && npm install && npm run build",
+  "functions": {
+    "api/index.ts": {
+      "maxDuration": 10
+    }
+  },
+  "headers": [
+    {
+      "source": "/bolos",
+      "headers": [
+        { "key": "Cache-Control", "value": "s-maxage=60, stale-while-revalidate=300" }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/auth/:path*", "destination": "/api/index.ts" },
     { "source": "/bolos/:path*", "destination": "/api/index.ts" },
