@@ -1,4 +1,4 @@
-// Função para validar email
+﻿// Função para validar email
 function validarEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
   return regex.test(email);
@@ -21,7 +21,7 @@ async function cadastrarCliente() {
     return;
   }
   if (!validarEmail(email)) {
-    Swal.fire('Atenção', 'Email invalido.', 'warning');
+    Swal.fire('Atenção', 'Email inválido.', 'warning');
     return;
   }
   if (senha.length < 6) {
@@ -46,10 +46,10 @@ async function cadastrarCliente() {
         title: 'Bem-vindo(a), ' + nome + '!',
         text: 'Cadastro realizado com sucesso.',
         icon: 'success',
-        confirmButtonText: 'Ir para Login'
+        confirmButtonText: 'Ir para Home'
       }).then(() => {
         $('#nome, #email, #senha, #telefone').val('');
-        window.location.href = 'login.html';
+        window.location.href = '../index.html';
       });
     }
   } catch (error) {

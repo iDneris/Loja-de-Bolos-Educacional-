@@ -12,32 +12,45 @@ function atualizarAnoRodape() {
 
 // Detecta qual porta da API está disponível
 let API_URL_DETECTADA = null;
+let detectando = false;
+let promessaDeteccao = null;
 
 async function detectarPortaAPI() {
-  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  if (API_URL_DETECTADA !== null) return;
   
-  if (!isLocalhost) {
-    API_URL_DETECTADA = '';
+  if (detectando && promessaDeteccao) {
+    await promessaDeteccao;
     return;
   }
-
-  const portas = [3000, 3001];
   
-  for (const porta of portas) {
-    try {
-      const response = await fetch(`http://localhost:${porta}/bolos`, { method: 'HEAD' });
-      if (response.ok || response.status === 404 || response.status === 401) {
-        API_URL_DETECTADA = `http://localhost:${porta}`;
-        // console.log(`API detectada na porta ${porta}`);
-        return;
-      }
-    } catch (error) {
-      // Porta não disponível, tenta a próxima
+  detectando = true;
+  promessaDeteccao = (async () => {
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    if (!isLocalhost) {
+      API_URL_DETECTADA = '';
+      return;
     }
-  }
+
+    const portas = [3001, 3000];
+    
+    for (const porta of portas) {
+      try {
+        const response = await fetch(`http://localhost:${porta}/bolos`, { method: 'HEAD' });
+        if (response.ok || response.status === 404 || response.status === 401) {
+          API_URL_DETECTADA = `http://localhost:${porta}`;
+          return;
+        }
+      } catch (error) {
+        // Porta não disponível, tenta a próxima
+      }
+    }
+    
+    API_URL_DETECTADA = 'http://localhost:3000';
+  })();
   
-  // Se nenhuma porta respondeu, usa a padrão
-  API_URL_DETECTADA = 'http://localhost:3000';
+  await promessaDeteccao;
+  detectando = false;
 }
 
 // Funcao master para chamar qualquer endpoint da API

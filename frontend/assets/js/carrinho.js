@@ -1,8 +1,8 @@
-$(document).ready(function() {
+﻿$(document).ready(async function() {
   const token = localStorage.getItem('token');
   if (token) {
-    carregarCarrinho();
-    atualizarContador();
+    await carregarCarrinho();
+    await atualizarContador();
   }
 
   $('#btn-finalizar').on('click', async function() {
@@ -60,8 +60,8 @@ async function atualizarQuantidade(itemId, novaQuantidade) {
 
   try {
     await apiCall(`/carrinho/atualizar/${itemId}`, 'PUT', { quantidade: novaQuantidade }, true);
-    carregarCarrinho();
-    atualizarContador();
+    await carregarCarrinho();
+    await atualizarContador();
   } catch (error) {
     console.error('Erro ao atualizar quantidade:', error);
     Swal.fire('Erro', 'Erro ao atualizar quantidade', 'error');
@@ -71,8 +71,8 @@ async function atualizarQuantidade(itemId, novaQuantidade) {
 async function removerItem(itemId) {
   try {
     await apiCall(`/carrinho/remover/${itemId}`, 'DELETE', null, true);
-    carregarCarrinho();
-    atualizarContador();
+    await carregarCarrinho();
+    await atualizarContador();
   } catch (error) {
     console.error('Erro ao remover item:', error);
     Swal.fire('Erro', 'Erro ao remover item', 'error');
@@ -187,7 +187,7 @@ async function atualizarContador() {
   }
 }
 
-async function adicionarAoCarrinho(boloId, quantidade = 1) {
+async function adicionarAoCarrinho(boloId, quantidade = 1, botaoElemento = null) {
   const token = localStorage.getItem('token');
   if (!token) {
     Swal.fire({
@@ -201,23 +201,50 @@ async function adicionarAoCarrinho(boloId, quantidade = 1) {
     return;
   }
 
+  // Feedback visual imediato
+  if (botaoElemento) {
+    botaoElemento.innerHTML = 'Adicionado';
+    botaoElemento.style.backgroundColor = '#22c55e';
+    botaoElemento.style.color = 'white';
+  }
+
   try {
     await apiCall('/carrinho/adicionar', 'POST', {
       bolo_id: boloId,
       quantidade: quantidade
     }, true);
-    
-    Swal.fire({
-      title: 'Adicionado!',
-      text: 'Produto adicionado ao carrinho',
-      icon: 'success',
-      timer: 2000,
-      showConfirmButton: false
-    });
-    
-    atualizarContador();
+
+    // Atualiza imediatamente contador e lista (sem precisar F5)
+    await atualizarContador();
+    if ($("#overlay-carrinho").hasClass('ativo')) {
+      await carregarCarrinho();
+    }
   } catch (error) {
     console.error('Erro ao adicionar:', error);
     Swal.fire('Erro', 'Erro ao adicionar ao carrinho', 'error');
+    
+    // Reverter feedback visual em caso de erro
+    if (botaoElemento) {
+      botaoElemento.innerHTML = 'Adicionar';
+      botaoElemento.style.backgroundColor = '';
+      botaoElemento.style.color = '';
+    }
+  } finally {
+    // Voltar ao normal após 2 segundos
+    if (botaoElemento) {
+      setTimeout(() => {
+        botaoElemento.innerHTML = 'Adicionar';
+        botaoElemento.style.backgroundColor = '';
+        botaoElemento.style.color = '';
+      }, 2000);
+    }
   }
 }
+
+
+window.carregarCarrinho = carregarCarrinho;
+window.atualizarQuantidade = atualizarQuantidade;
+window.removerItem = removerItem;
+window.finalizarCompra = finalizarCompra;
+window.atualizarContador = atualizarContador;
+window.adicionarAoCarrinho = adicionarAoCarrinho;

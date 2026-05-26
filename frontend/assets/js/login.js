@@ -1,4 +1,11 @@
-$(document).ready(function(){
+﻿$(document).ready(function(){
+    const token = localStorage.getItem('token');
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuario') || 'null');
+
+    if (token && usuarioLogado) {
+      window.location.href = usuarioLogado.role === 'admin' ? 'painelAdministrativo.html' : '../index.html';
+      return;
+    }
     document.getElementById('btn_login').addEventListener('click', async function() {
     try {
         const resultado = await auth();

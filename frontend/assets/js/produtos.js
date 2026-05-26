@@ -1,4 +1,4 @@
-$(document).ready(function(){
+﻿$(document).ready(function(){
   // Se estiver na página de produto, carrega apenas o produto específico
   const container = document.querySelector("#detalhe-produto");
   if (container) {
@@ -67,13 +67,13 @@ function renderizarProdutoUnico(produto) {
             <div class="quantidade-wrapper-inline">
               <label>Quantidade:</label>
               <div class="quantidade-controle">
-                <button type="button" class="btn-qtd" onclick="ajustarQtdProduto(-1);">−</button>
+                <button type="button" class="btn-qtd" onclick="ajustarQtdProduto(-1);">-</button>
                 <input type="number" id="produto-quantidade" min="1" max="10" value="1" readonly>
                 <button type="button" class="btn-qtd" onclick="ajustarQtdProduto(1);">+</button>
               </div>
             </div>
             <button class="btn-add-carrinho" id="btn-add-carrinho-produto">
-              🛒 Adicionar
+              Adicionar
             </button>
           </div>
           
@@ -95,7 +95,7 @@ function renderizarProdutoUnico(produto) {
   // Adicionar evento usando delegação
   $(document).on('click', '#btn-add-carrinho-produto', function() {
     const quantidade = parseInt($('#produto-quantidade').val()) || 1;
-    adicionarAoCarrinho(produto.id, quantidade);
+    adicionarAoCarrinho(produto.id, quantidade, this);
   });
 }
 
@@ -140,10 +140,10 @@ function ajustarQtdCard(produtoId, delta) {
   input.value = novaQtd;
 }
 
-function adicionarAoCarrinhoCard(produtoId) {
+function adicionarAoCarrinhoCard(produtoId, botaoElemento) {
   const input = document.getElementById(`qtd-card-${produtoId}`);
   const quantidade = input ? parseInt(input.value) : 1;
-  adicionarAoCarrinho(produtoId, quantidade);
+  adicionarAoCarrinho(produtoId, quantidade, botaoElemento);
 }
 
 /* ---------------------------------------------------------
@@ -165,12 +165,12 @@ function renderizarCardapio(produtos) {
       </a>
       <div class="card-acoes">
         <div class="quantidade-card">
-          <button type="button" class="btn-qtd-menos" onclick="event.stopPropagation(); ajustarQtdCard('${p.id}', -1);">−</button>
+          <button type="button" class="btn-qtd-menos" onclick="event.stopPropagation(); ajustarQtdCard('${p.id}', -1);">-</button>
           <input type="number" id="qtd-card-${p.id}" value="1" min="1" max="10" readonly>
           <button type="button" class="btn-qtd-mais" onclick="event.stopPropagation(); ajustarQtdCard('${p.id}', 1);">+</button>
         </div>
-        <button class="btn-add-carrinho-card" onclick="event.stopPropagation(); adicionarAoCarrinhoCard('${p.id}');">
-          🛒 Adicionar
+        <button class="btn-add-carrinho-card" onclick="event.stopPropagation(); adicionarAoCarrinhoCard('${p.id}', this);">
+          Adicionar
         </button>
       </div>
     </article>
