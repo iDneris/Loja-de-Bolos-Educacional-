@@ -31,7 +31,8 @@ const diretorioFrontend = encontrarDiretorio(
 app.use(express.json());
 app.use(cors({
   origin: config.corsOrigem,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 // Servir arquivos estáticos da pasta public
