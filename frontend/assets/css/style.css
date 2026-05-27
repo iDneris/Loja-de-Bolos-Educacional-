@@ -1,17 +1,17 @@
-﻿/* =========================================================
+/* =========================================================
    A&L Cakes - Folha de estilo principal
    Paleta: rosa suave + branco + neutros
-   Autor: Projeto acadÃªmico
+   Autor: Projeto academico
    ========================================================= */
 
-/* -------- Reset bÃ¡sico -------- */
+/* -------- Reset basico -------- */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* -------- VariÃ¡veis de design (cores, fontes, sombras) -------- */
+/* -------- Variaveis de design (cores, fontes, sombras) -------- */
 :root {
   --rosa-claro: #fce4ec;
   --rosa-suave: #f8c8dc;
@@ -221,7 +221,7 @@ img {
 .texto-notificacoes-mobile {
   display: none;
 }
-/* BotÃ£o hambÃºrguer (mobile) */
+/* Botao hamburguer (mobile) */
 .hamburguer {
   display: none;
   flex-direction: column;
@@ -295,7 +295,7 @@ img {
 }
 
 /* =========================================================
-   HERO (pÃ¡gina inicial)
+   HERO (pagina inicial)
    ========================================================= */
 .hero {
   background: linear-gradient(135deg, var(--rosa-claro) 0%, var(--bege) 100%);
@@ -342,7 +342,7 @@ img {
   object-fit: cover;
 }
 
-/* AnimaÃ§Ãµes */
+/* Animacoes */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -359,7 +359,7 @@ img {
 }
 
 /* =========================================================
-   APRESENTAÃ‡ÃƒO (sobre rÃ¡pida na home)
+   APRESENTACAO (sobre rapida na home)
    ========================================================= */
 .apresentacao {
   text-align: center;
@@ -374,7 +374,7 @@ img {
 }
 
 /* =========================================================
-   GRID DE PRODUTOS (cardÃ¡pio + destaques)
+   GRID DE PRODUTOS (cardapio + destaques)
    ========================================================= */
 .produtos-grid {
   display: grid;
@@ -489,14 +489,14 @@ img {
   color: inherit;
 }
 
-/* AÃ§Ãµes do produto - layout vertical */
+/* Acoes do produto - layout vertical */
 .produto-acoes {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* AÃ§Ãµes do carrinho na pÃ¡gina de produto - layout horizontal */
+/* Acoes do carrinho na pagina de produto - layout horizontal */
 .acoes-carrinho {
   display: flex;
   align-items: center;
@@ -542,12 +542,12 @@ img {
   justify-content: center;
 }
 
-/* BotÃ£o menos com canto arredondado Ã  esquerda */
+/* Botao menos com canto arredondado a esquerda */
 .quantidade-controle button:first-child {
   border-radius: 10px 0 0 10px;
 }
 
-/* BotÃ£o mais com canto arredondado Ã  direita */
+/* Botao mais com canto arredondado a direita */
 .quantidade-controle button:last-child {
   border-radius: 0 10px 10px 0;
 }
@@ -571,7 +571,7 @@ img {
   outline: none;
 }
 
-/* AÃ§Ãµes do card - layout horizontal */
+/* Acoes do card - layout horizontal */
 .card-acoes {
   display: flex;
   align-items: center;
@@ -620,7 +620,7 @@ img {
   outline: none;
 }
 
-/* BotÃ£o adicionar ao carrinho no card - ESTILO OUTLINE */
+/* BOTAO CARRINHO no card - ESTILO OUTLINE */
 .btn-add-carrinho-card {
   flex: 1;
   padding: 0.6rem 1rem;
@@ -807,7 +807,7 @@ img {
 }
 
 /* =========================================================
-   FORMULÃRIOS (login, cadastro, admin)
+   FORMULARIOS (login, cadastro, admin)
    ========================================================= */
 .form-container {
   max-width: 460px;
@@ -951,7 +951,7 @@ img {
   color: var(--texto-claro);
 }
 
-/* PrÃ©-visualizaÃ§Ã£o do admin */
+/* Pre-visualizacao do admin */
 .preview-produto {
   margin-top: 2rem;
   padding: 1.5rem;
@@ -966,7 +966,7 @@ img {
 }
 
 /* =========================================================
-   RODAPÃ‰
+   RODAPE
    ========================================================= */
 .rodape {
   background-color: var(--texto);
@@ -989,13 +989,13 @@ img {
   font-family: var(--fonte-titulo);
 }
 
-.rodape p, .rodape a {
+.rodape p {
   color: #e8d8df;
   font-size: 0.93rem;
   margin-bottom: 0.5rem;
 }
 
-.rodape a:hover {
+.rodape a {
   color: var(--rosa-suave);
 }
 
@@ -1143,7 +1143,7 @@ img {
     font-weight: 600;
   }
 
-  /* Menu vira hambÃºrguer */
+  /* Menu vira hamburguer */
   .hamburguer {
     display: flex;
   }
@@ -1536,11 +1536,9 @@ img {
   color: #a94468;
 }
 
-.rodape-carrinho {
+.total-carrinho {
   margin-top: 2rem;
-
   border-top: 1px solid var(--cinza-borda);
-
   padding-top: 1.5rem;
 }
 
@@ -1623,7 +1621,7 @@ img {
     margin-bottom: 1.2rem;
   }
 
-  .rodape-carrinho {
+  .total-carrinho {
     margin-top: 1.2rem;
   }
 
@@ -1792,7 +1790,7 @@ img {
 
 
 /* =========================================================
-   USUÃRIO NAVBAR
+   USUARIO NAVBAR
 ========================================================= */
 
 .usuario-navbar{
@@ -1898,7 +1896,7 @@ img {
 
 
 /* =========================================================
-   BOTÃƒO CLIENTES CADASTRADOS (mesmo padrÃ£o do .btn-carrinho)
+   BOTAO CLIENTES CADASTRADOS (mesmo padrao do .btn-carrinho)
 ========================================================= */
 .btn-clientes {
   position: relative;
@@ -1931,7 +1929,7 @@ img {
 }
 
 /* =========================================================
-   MODAL CLIENTES (segue padrÃ£o do carrinho)
+   MODAL CLIENTES (segue padrao do carrinho)
 ========================================================= */
 .overlay-clientes {
   position: fixed;
@@ -2059,7 +2057,7 @@ img {
 
 
 /* =========================================================
-   PÃGINA PRODUTO - versÃ£o clean
+   pagina PRODUTO - versao clean
 ========================================================= */
 .produto-layout {
   width: 100%;
@@ -2091,7 +2089,7 @@ img {
   opacity: .5;
 }
 
-/* Imagem: sem card pesado, sÃ³ uma moldura suave */
+/* Imagem: sem card pesado, so uma moldura suave */
 .produto-detalhe-img {
   display: flex;
   justify-content: center;
@@ -2192,7 +2190,7 @@ img {
   border-bottom: 1px solid var(--cinza-borda);
 }
 
-/* Lista de benefÃ­cios â€” minimalista, sem cards */
+/* Lista de beneficios - minimalista, sem cards */
 .beneficios-produto {
   display: flex;
   flex-direction: column;
@@ -2220,7 +2218,7 @@ img {
 }
 
 /* =========================================================
-   BOTÃ•ES PRODUTO (MESMO ESTILO EDITAR / EXCLUIR)
+   BOTOES PRODUTO (MESMO ESTILO EDITAR / EXCLUIR)
 ========================================================= */
 
 .produto-acoes {
@@ -2282,7 +2280,7 @@ img {
   text-decoration: none;
 }
 
-/* BOTÃƒO FAZER PEDIDO
+/* BOTAO FAZER PEDIDO
    (mesmo estilo do Editar) */
 .btn-whatsapp {
   background: var(--rosa-suave);
@@ -2295,7 +2293,7 @@ img {
   color: white;
 }
 
-/* BOTÃƒO CARRINHO
+/* BOTAO CARRINHO
    (mesmo estilo do Excluir) */
 .btn-add-carrinho {
   background: rgba(248, 200, 220, 0.6);
@@ -2348,7 +2346,7 @@ img {
 }
 
 
-/* Nota auxiliar abaixo do botÃ£o */
+/* Nota auxiliar abaixo do botao */
 .produto-nota {
   margin-top: 1rem;
   text-align: center;
