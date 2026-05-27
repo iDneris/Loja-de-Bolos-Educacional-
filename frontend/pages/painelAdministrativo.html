@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Painel Administrativo - A&L Cakes</title>
+  <link rel="icon" type="image/png" href="../assets/images/alcakes_logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -138,6 +139,52 @@
       font-size: 2rem;
       font-weight: 700;
       color: var(--rosa-escuro);
+    }
+
+    .dashboard-filtros {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-bottom: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.75rem;
+      align-items: end;
+    }
+
+    .dashboard-filtros .filtro-campo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .dashboard-filtros label {
+      font-size: 0.8rem;
+      color: var(--texto-claro);
+      font-weight: 600;
+    }
+
+    .dashboard-filtros select,
+    .dashboard-filtros input {
+      border: 1.5px solid var(--cinza-borda);
+      border-radius: 10px;
+      padding: 0.55rem 0.65rem;
+      font-family: var(--fonte-texto);
+      background: #fff;
+    }
+
+    .dashboard-filtros .filtro-acoes {
+      display: flex;
+      gap: 0.45rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .dashboard-resumo-filtros {
+      font-size: 0.88rem;
+      color: var(--texto-claro);
+      margin-bottom: 1rem;
     }
     
     /* Tabela */
@@ -414,26 +461,41 @@
       min-width: 220px;
     }
     
+    
     @media (max-width: 768px) {
       .menu-lateral {
         width: 100%;
         position: relative;
+        top: 0;
         height: auto;
+        padding: 1.5rem 1rem;
       }
-      
+
       .conteudo-painel {
         margin-left: 0;
+        padding: 1.5rem;
+        padding-top: 1.5rem;
       }
-      
+
       .painel-container {
         flex-direction: column;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .graficos-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-filtros {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-
-  <!-- Header será carregado dinamicamente via header.js -->
 
   <div class="painel-container">
     <!-- MENU LATERAL -->
@@ -443,6 +505,11 @@
       <div class="menu-item ativo" data-modulo="dashboard">
         <span class="icone">📊</span>
         <span>Dashboard</span>
+      </div>
+
+      <div class="menu-item" data-modulo="pedidos">
+        <span class="icone">🧾</span>
+        <span>Gerenciar Pedidos</span>
       </div>
       
       <div class="menu-item" data-modulo="produtos">
@@ -459,12 +526,6 @@
         <span class="icone">👨‍💼</span>
         <span>Gerenciar Equipe</span>
       </div>
-      <div class="menu-item" data-modulo="pedidos">
-        <span class="icone">🧾</span>
-        <span>Gerenciar Pedidos</span>
-      </div>
-      
-      
       <div class="menu-item" data-modulo="whatsapp">
         <span class="icone"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.13 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></span>
         <span>Configurar WhatsApp</span>
@@ -483,6 +544,56 @@
       <!-- DASHBOARD -->
       <div id="modulo-dashboard" class="modulo ativo">
         <h1 class="titulo-secao">Dashboard</h1>
+
+        <div class="dashboard-filtros">
+          <div class="filtro-campo">
+            <label for="filtro-periodo">Periodo</label>
+            <select id="filtro-periodo">
+              <option value="hoje">Hoje</option>
+              <option value="7d">Ultimos 7 dias</option>
+              <option value="30d">Ultimos 30 dias</option>
+              <option value="mes">Mes atual</option>
+              <option value="custom">Personalizado</option>
+              <option value="todos">Todo periodo</option>
+            </select>
+          </div>
+          <div class="filtro-campo">
+            <label for="filtro-status">Status</label>
+            <select id="filtro-status">
+              <option value="todos">Todos</option>
+              <option value="pendente">Pendente</option>
+              <option value="confirmado">Confirmado</option>
+              <option value="em_preparo">Em preparo</option>
+              <option value="pronto_retirada">Pronto para retirada</option>
+              <option value="saiu_entrega">Saiu para entrega</option>
+              <option value="entregue">Entregue</option>
+              <option value="cancelado">Cancelado</option>
+            </select>
+          </div>
+          <div class="filtro-campo">
+            <label for="filtro-origem">Origem do pedido</label>
+            <select id="filtro-origem">
+              <option value="todos">Todos</option>
+              <option value="cliente">Cliente</option>
+              <option value="equipe">Admin/Colaborador</option>
+              <option value="nao_identificado">Nao identificado</option>
+            </select>
+          </div>
+          <div class="filtro-campo">
+            <label for="filtro-data-inicio">Data inicio</label>
+            <input type="date" id="filtro-data-inicio">
+          </div>
+          <div class="filtro-campo">
+            <label for="filtro-data-fim">Data fim</label>
+            <input type="date" id="filtro-data-fim">
+          </div>
+          <div class="filtro-acoes">
+            <button type="button" class="btn-novo" onclick="aplicarFiltrosDashboard()">Aplicar</button>
+            <button type="button" class="btn-acao btn-editar" onclick="resetarFiltrosDashboard()">Limpar</button>
+          </div>
+        </div>
+
+        <div id="dashboard-resumo-filtros" class="dashboard-resumo-filtros"></div>
         
         <div class="stats-grid">
           <div class="stat-card">
@@ -498,7 +609,7 @@
             <div class="valor" id="stat-equipe">-</div>
           </div>
           <div class="stat-card">
-            <h4>Pedidos Hoje</h4>
+            <h4 id="label-stat-pedidos">Total de Pedidos</h4>
             <div class="valor" id="stat-pedidos">-</div>
           </div>
         </div>
@@ -816,9 +927,7 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="../assets/js/controller.js"></script>
-  <!-- Footer será carregado dinamicamente via footer.js -->
   <script src="../assets/js/header.js"></script>
-  <script src="../assets/js/footer.js"></script>
   <script>
     // Navegação entre módulos
     $('.menu-item[data-modulo]').on('click', function() {
@@ -841,7 +950,195 @@
 
     // Dashboard
     let graficos = {};
-    
+    let dashboardState = {
+      produtos: [],
+      usuarios: [],
+      clientes: [],
+      equipe: [],
+      pedidos: []
+    };
+
+    const dashboardFiltros = {
+      periodo: 'hoje',
+      status: 'todos',
+      origem: 'todos',
+      dataInicio: '',
+      dataFim: ''
+    };
+
+    function normalizarTelefone(telefone) {
+      return String(telefone || '').replace(/\D/g, '');
+    }
+
+    function getDataPedido(pedido) {
+      const base = pedido?.data || pedido?.criado_em;
+      const dt = new Date(base);
+      return Number.isNaN(dt.getTime()) ? null : dt;
+    }
+
+    function inicioDoDia(data) {
+      const dt = new Date(data);
+      dt.setHours(0, 0, 0, 0);
+      return dt;
+    }
+
+    function fimDoDia(data) {
+      const dt = new Date(data);
+      dt.setHours(23, 59, 59, 999);
+      return dt;
+    }
+
+    function dataParaInput(data) {
+      const d = new Date(data);
+      const mes = String(d.getMonth() + 1).padStart(2, '0');
+      const dia = String(d.getDate()).padStart(2, '0');
+      return `${d.getFullYear()}-${mes}-${dia}`;
+    }
+
+    function formatarDataISOParaBR(isoDate) {
+      if (!isoDate) return '';
+      const partes = String(isoDate).split('-');
+      if (partes.length !== 3) return String(isoDate);
+      const ano = Number(partes[0]);
+      const mes = Number(partes[1]);
+      const dia = Number(partes[2]);
+      if (!ano || !mes || !dia) return String(isoDate);
+      const dt = new Date(ano, mes - 1, dia);
+      return dt.toLocaleDateString('pt-BR');
+    }
+
+    function classificarOrigemPedido(pedido, usuariosPorTelefone) {
+      const telefone = normalizarTelefone(pedido?.clienteTelefone);
+      const role = usuariosPorTelefone[telefone];
+      if (role === 'admin' || role === 'colaborador') return 'equipe';
+      if (role === 'cliente') return 'cliente';
+      return 'nao_identificado';
+    }
+
+    function getResumoPeriodoTexto() {
+      const { periodo, dataInicio, dataFim } = dashboardFiltros;
+      if (periodo === 'hoje') return 'Hoje';
+      if (periodo === '7d') return 'Ultimos 7 dias';
+      if (periodo === '30d') return 'Ultimos 30 dias';
+      if (periodo === 'mes') return 'Mes atual';
+      if (periodo === 'todos') return 'Todo periodo';
+      if (periodo === 'custom') {
+        if (dataInicio && dataFim) {
+          return `${formatarDataISOParaBR(dataInicio)} ate ${formatarDataISOParaBR(dataFim)}`;
+        }
+        return 'Personalizado';
+      }
+      return 'Periodo';
+    }
+
+    function obterRangePeriodo() {
+      const hoje = new Date();
+      let inicio = null;
+      let fim = null;
+
+      switch (dashboardFiltros.periodo) {
+        case 'hoje':
+          inicio = inicioDoDia(hoje);
+          fim = fimDoDia(hoje);
+          break;
+        case '7d':
+          inicio = inicioDoDia(new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - 6));
+          fim = fimDoDia(hoje);
+          break;
+        case '30d':
+          inicio = inicioDoDia(new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - 29));
+          fim = fimDoDia(hoje);
+          break;
+        case 'mes':
+          inicio = inicioDoDia(new Date(hoje.getFullYear(), hoje.getMonth(), 1));
+          fim = fimDoDia(hoje);
+          break;
+        case 'custom':
+          if (dashboardFiltros.dataInicio) inicio = inicioDoDia(new Date(`${dashboardFiltros.dataInicio}T00:00:00`));
+          if (dashboardFiltros.dataFim) fim = fimDoDia(new Date(`${dashboardFiltros.dataFim}T00:00:00`));
+          break;
+        default:
+          break;
+      }
+
+      return { inicio, fim };
+    }
+
+    function contarPedidosHoje(pedidos) {
+      const inicio = inicioDoDia(new Date());
+      const fim = fimDoDia(new Date());
+      return pedidos.filter((pedido) => {
+        const dt = getDataPedido(pedido);
+        return dt && dt >= inicio && dt <= fim;
+      }).length;
+    }
+
+    function filtrarPedidosPorPeriodo(pedidos) {
+      const { inicio, fim } = obterRangePeriodo();
+
+      return pedidos.filter((pedido) => {
+        const dt = getDataPedido(pedido);
+        if (!dt) return false;
+        if (inicio && dt < inicio) return false;
+        if (fim && dt > fim) return false;
+        return true;
+      });
+    }
+
+    function filtrarPedidosDashboard(pedidos) {
+      return filtrarPedidosPorPeriodo(pedidos).filter((pedido) => {
+        if (dashboardFiltros.status !== 'todos' && pedido.status !== dashboardFiltros.status) return false;
+        if (dashboardFiltros.origem !== 'todos' && pedido._origem !== dashboardFiltros.origem) return false;
+        return true;
+      });
+    }
+
+    function inicializarFiltrosDashboard() {
+      const hoje = new Date();
+      $('#filtro-data-inicio').val(dataParaInput(hoje));
+      $('#filtro-data-fim').val(dataParaInput(hoje));
+      $('#filtro-periodo').val(dashboardFiltros.periodo);
+      $('#filtro-status').val(dashboardFiltros.status);
+      $('#filtro-origem').val(dashboardFiltros.origem);
+      atualizarEstadoCamposDataDashboard();
+    }
+
+    function atualizarEstadoCamposDataDashboard() {
+      const custom = $('#filtro-periodo').val() === 'custom';
+      if (custom) {
+        $('#filtro-data-inicio, #filtro-data-fim').css('opacity', '1');
+      } else {
+        $('#filtro-data-inicio, #filtro-data-fim').css('opacity', '0.85');
+      }
+    }
+
+    function aplicarFiltrosDashboard() {
+      dashboardFiltros.periodo = $('#filtro-periodo').val() || 'hoje';
+      dashboardFiltros.status = $('#filtro-status').val() || 'todos';
+      dashboardFiltros.origem = $('#filtro-origem').val() || 'todos';
+      dashboardFiltros.dataInicio = $('#filtro-data-inicio').val() || '';
+      dashboardFiltros.dataFim = $('#filtro-data-fim').val() || '';
+
+      if (dashboardFiltros.periodo === 'custom' && dashboardFiltros.dataInicio && dashboardFiltros.dataFim) {
+        if (new Date(dashboardFiltros.dataInicio) > new Date(dashboardFiltros.dataFim)) {
+          Swal.fire('Atenção', 'A data inicial nao pode ser maior que a data final.', 'warning');
+          return;
+        }
+      }
+
+      renderizarDashboard();
+    }
+
+    function resetarFiltrosDashboard() {
+      dashboardFiltros.periodo = 'hoje';
+      dashboardFiltros.status = 'todos';
+      dashboardFiltros.origem = 'todos';
+      dashboardFiltros.dataInicio = '';
+      dashboardFiltros.dataFim = '';
+      inicializarFiltrosDashboard();
+      renderizarDashboard();
+    }
+
     async function carregarDashboard() {
       try {
         const [produtos, usuarios, pedidos] = await Promise.all([
@@ -849,39 +1146,107 @@
           apiCall('/usuarios', 'GET', null, true),
           apiCall('/pedidos', 'GET', null, true).catch(() => [])
         ]);
-        
+
         const clientes = usuarios.filter(u => u.role === 'cliente');
         const equipe = usuarios.filter(u => u.role === 'admin' || u.role === 'colaborador');
-        
-        $('#stat-produtos').text(produtos.length);
-        $('#stat-clientes').text(clientes.length);
-        $('#stat-equipe').text(equipe.length);
-        $('#stat-pedidos').text(pedidos.length || 0);
-        
-        // Carregar gráficos
-        carregarGraficos(pedidos, produtos, clientes);
+
+        const usuariosPorTelefone = usuarios.reduce((acc, usuario) => {
+          const chave = normalizarTelefone(usuario.telefone);
+          if (chave) acc[chave] = usuario.role;
+          return acc;
+        }, {});
+
+        const pedidosNormalizados = pedidos.map((pedido) => ({
+          ...pedido,
+          _dataObj: getDataPedido(pedido),
+          _origem: classificarOrigemPedido(pedido, usuariosPorTelefone),
+        })).filter((pedido) => pedido._dataObj);
+
+        dashboardState = {
+          produtos,
+          usuarios,
+          clientes,
+          equipe,
+          pedidos: pedidosNormalizados
+        };
+
+        renderizarDashboard();
       } catch (error) {
         console.error('Erro ao carregar dashboard:', error);
       }
     }
-    
-    function carregarGraficos(pedidos, produtos, clientes) {
-      // Destruir gráficos anteriores
+
+    function renderizarDashboard() {
+      const { produtos, clientes, equipe, pedidos } = dashboardState;
+      const pedidosPeriodo = filtrarPedidosPorPeriodo(pedidos);
+      const pedidosFiltrados = filtrarPedidosDashboard(pedidos);
+      const pedidosHoje = contarPedidosHoje(pedidos);
+      const faturamentoFiltrado = pedidosFiltrados
+        .filter((p) => p.status !== 'cancelado')
+        .reduce((acc, p) => acc + (Number(p.total) || 0), 0);
+
+      const porOrigem = pedidosFiltrados.reduce((acc, pedido) => {
+        acc[pedido._origem] = (acc[pedido._origem] || 0) + 1;
+        return acc;
+      }, { cliente: 0, equipe: 0, nao_identificado: 0 });
+
+      $('#stat-produtos').text(produtos.length);
+      $('#stat-clientes').text(clientes.length);
+      $('#stat-equipe').text(equipe.length);
+      $('#label-stat-pedidos').text(`Total de Pedidos (${getResumoPeriodoTexto()})`);
+      $('#stat-pedidos').text(pedidosPeriodo.length);
+
+      const filtrosAtivos = [];
+      if (dashboardFiltros.periodo !== 'todos') {
+        filtrosAtivos.push(`Periodo: ${getResumoPeriodoTexto()}`);
+      }
+      if (dashboardFiltros.status !== 'todos') {
+        filtrosAtivos.push(`Status: ${formatarStatus(dashboardFiltros.status)}`);
+      }
+      if (dashboardFiltros.origem !== 'todos') {
+        filtrosAtivos.push(`Origem: ${ORIGEM_LABELS[dashboardFiltros.origem] || dashboardFiltros.origem}`);
+      }
+
+      $('#dashboard-resumo-filtros').text(
+        filtrosAtivos.length
+          ? `Filtros ativos: ${filtrosAtivos.join(' | ')}`
+          : 'Filtros ativos: nenhum'
+      );
+
+      carregarGraficos(pedidosFiltrados);
+    }
+
+    function carregarGraficos(pedidosFiltrados) {
       Object.values(graficos).forEach(g => g?.destroy?.());
-      
-      // Cores do tema
+
       const cores = ['#d97aa3', '#f8c8dc', '#6b4c5c', '#e8b4b8', '#c97aa3'];
-      
-      // 1. Gráfico de Vendas por Categoria (Donut)
+      const pedidosValidos = pedidosFiltrados.filter((p) => p.status !== 'cancelado');
+
+      const vendasPorProduto = {};
+      pedidosValidos.forEach((pedido) => {
+        (pedido.itens || []).forEach((item) => {
+          const nome = item.nomeBolo || 'Item';
+          const subtotal = (Number(item.precoUnitario) || 0) * (Number(item.quantidade) || 0);
+          vendasPorProduto[nome] = (vendasPorProduto[nome] || 0) + subtotal;
+        });
+      });
+
+      const topProdutos = Object.entries(vendasPorProduto)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+      const categoriasLabels = topProdutos.length ? topProdutos.map(([nome]) => nome) : ['Sem dados'];
+      const categoriasData = topProdutos.length ? topProdutos.map(([, total]) => Number(total.toFixed(2))) : [1];
+
       const ctxCategorias = document.getElementById('grafico-categorias');
       if (ctxCategorias) {
         graficos.categorias = new Chart(ctxCategorias, {
           type: 'doughnut',
           data: {
-            labels: produtos.slice(0, 5).map(p => p.nome),
+            labels: categoriasLabels,
             datasets: [{
-              data: produtos.slice(0, 5).map(() => Math.floor(Math.random() * 50) + 10),
-              backgroundColor: cores,
+              data: categoriasData,
+              backgroundColor: topProdutos.length ? cores : ['#eadfe3'],
               borderWidth: 0
             }]
           },
@@ -894,17 +1259,33 @@
           }
         });
       }
-      
-      // 2. Gráfico de Vendas da Semana (Barras)
+
+      const hoje = new Date();
+      const labelsSemana = [];
+      const mapaSemana = {};
+      for (let i = 6; i >= 0; i -= 1) {
+        const dt = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - i);
+        const chave = dataParaInput(dt);
+        mapaSemana[chave] = 0;
+        labelsSemana.push(dt.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', ''));
+      }
+
+      pedidosValidos.forEach((pedido) => {
+        const chave = dataParaInput(pedido._dataObj);
+        if (Object.prototype.hasOwnProperty.call(mapaSemana, chave)) {
+          mapaSemana[chave] += Number(pedido.total) || 0;
+        }
+      });
+
       const ctxSemana = document.getElementById('grafico-semana');
       if (ctxSemana) {
         graficos.semana = new Chart(ctxSemana, {
           type: 'bar',
           data: {
-            labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            labels: labelsSemana,
             datasets: [{
               label: 'Vendas (R$)',
-              data: [1200, 1900, 800, 2200, 2800, 3500, 1500],
+              data: Object.values(mapaSemana).map((v) => Number(v.toFixed(2))),
               backgroundColor: '#d97aa3',
               borderRadius: 8
             }]
@@ -921,17 +1302,28 @@
           }
         });
       }
-      
-      // 3. Gráfico de Status dos Pedidos (Donut)
+
+      const statusCount = pedidosFiltrados.reduce((acc, pedido) => {
+        const chave = pedido.status || 'pendente';
+        acc[chave] = (acc[chave] || 0) + 1;
+        return acc;
+      }, {});
+
+      const statusEntries = Object.entries(statusCount);
+      const statusLabels = statusEntries.length
+        ? statusEntries.map(([status]) => STATUS_LABELS[status] || status)
+        : ['Sem dados'];
+      const statusData = statusEntries.length ? statusEntries.map(([, qtd]) => qtd) : [1];
+
       const ctxStatus = document.getElementById('grafico-status');
       if (ctxStatus) {
         graficos.status = new Chart(ctxStatus, {
           type: 'doughnut',
           data: {
-            labels: ['Pendentes', 'Concluídos', 'Cancelados'],
+            labels: statusLabels,
             datasets: [{
-              data: [15, 45, 5],
-              backgroundColor: ['#f8c8dc', '#d97aa3', '#e8b4b8'],
+              data: statusData,
+              backgroundColor: statusEntries.length ? ['#f8c8dc', '#d97aa3', '#e8b4b8', '#6b4c5c', '#c97aa3', '#f2a9b9'] : ['#eadfe3'],
               borderWidth: 0
             }]
           },
@@ -944,17 +1336,26 @@
           }
         });
       }
-      
-      // 4. Gráfico de Top Clientes (Barras Horizontais)
+
+      const pedidosPorCliente = pedidosValidos.reduce((acc, pedido) => {
+        const nome = pedido.clienteNome || 'Cliente';
+        acc[nome] = (acc[nome] || 0) + 1;
+        return acc;
+      }, {});
+
+      const topClientes = Object.entries(pedidosPorCliente)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
       const ctxClientes = document.getElementById('grafico-clientes');
-      if (ctxClientes && clientes.length > 0) {
+      if (ctxClientes) {
         graficos.clientes = new Chart(ctxClientes, {
           type: 'bar',
           data: {
-            labels: clientes.slice(0, 5).map(c => c.nome.split(' ')[0]),
+            labels: topClientes.length ? topClientes.map(([nome]) => nome.split(' ')[0]) : ['Sem dados'],
             datasets: [{
               label: 'Pedidos',
-              data: clientes.slice(0, 5).map(() => Math.floor(Math.random() * 20) + 1),
+              data: topClientes.length ? topClientes.map(([, qtd]) => qtd) : [0],
               backgroundColor: '#6b4c5c',
               borderRadius: 8
             }]
@@ -967,7 +1368,7 @@
               legend: { display: false }
             },
             scales: {
-              x: { beginAtZero: true }
+              x: { beginAtZero: true, ticks: { precision: 0 } }
             }
           }
         });
@@ -995,6 +1396,12 @@
       cancelado: []
     };
 
+    const ORIGEM_LABELS = {
+      cliente: 'Cliente',
+      equipe: 'Admin/Colaborador',
+      nao_identificado: 'Nao identificado'
+    };
+
     function formatarStatus(status) {
       return STATUS_LABELS[status] || status || '---';
     }
@@ -1011,6 +1418,11 @@
 
       try {
         const pedidos = await apiCall('/pedidos', 'GET', null, true);
+        const usuariosPorTelefone = dashboardState.usuarios.reduce((acc, usuario) => {
+          const chave = normalizarTelefone(usuario.telefone);
+          if (chave) acc[chave] = usuario.role;
+          return acc;
+        }, {});
 
         if (!pedidos.length) {
           $root.html('<p style="text-align:center;color:var(--texto-claro);padding:1rem;">Nenhum pedido encontrado.</p>');
@@ -1018,6 +1430,7 @@
         }
 
         $root.html(pedidos.map((pedido) => {
+          const origem = classificarOrigemPedido(pedido, usuariosPorTelefone);
           const proximo = STATUS_FLOW[pedido.status] || [];
           const options = proximo.length
             ? `<option value="">Selecione próximo status</option>${proximo.map(s => `<option value="${s}">${formatarStatus(s)}</option>`).join('')}`
@@ -1048,6 +1461,7 @@
               <div class="pedido-detalhes" id="pedido-detalhes-${pedido.id}">
                 <p><strong>Cliente:</strong> ${pedido.clienteNome || '-'}</p>
                 <p><strong>Telefone:</strong> ${pedido.clienteTelefone || '-'}</p>
+                <p><strong>Origem:</strong> ${ORIGEM_LABELS[origem] || ORIGEM_LABELS.nao_identificado}</p>
                 <p><strong>Status atual:</strong> ${formatarStatus(pedido.status)}</p>
                 <div style="margin-top:.7rem;">
                   <strong>Itens</strong>
@@ -1561,8 +1975,20 @@ Obrigado! 🙏`
       window.location.href = 'login.html';
     }
 
+    $('#filtro-periodo').on('change', function() {
+      atualizarEstadoCamposDataDashboard();
+    });
+
+    $('#filtro-data-inicio, #filtro-data-fim').on('change input', function() {
+      if ($('#filtro-periodo').val() !== 'custom') {
+        $('#filtro-periodo').val('custom');
+      }
+      atualizarEstadoCamposDataDashboard();
+    });
+
     // Inicializar
     $(document).ready(function() {
+      inicializarFiltrosDashboard();
       carregarDashboard();
     });
 
