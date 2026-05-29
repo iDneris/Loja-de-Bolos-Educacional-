@@ -67,6 +67,13 @@ async function apiCall(endpoint, method = 'GET', body = null, needsAuth = false)
     await detectarPortaAPI();
   }
 
+  // Evita cache em requisições GET adicionando um timestamp
+  let finalEndpoint = endpoint;
+  if (method.toUpperCase() === 'GET') {
+    const separator = endpoint.includes('?') ? '&' : '?';
+    finalEndpoint = `${endpoint}${separator}_t=${Date.now()}`;
+  }
+
   const config = {
     method: method,
     headers: {
@@ -88,7 +95,7 @@ async function apiCall(endpoint, method = 'GET', body = null, needsAuth = false)
   }
 
   try {
-    const response = await fetch(`${API_URL_DETECTADA}${endpoint}`, config);
+    const response = await fetch(`${API_URL_DETECTADA}${finalEndpoint}`, config);
     const contentType = response.headers.get('content-type') || '';
     const data = contentType.includes('application/json') ? await response.json() : null;
 
