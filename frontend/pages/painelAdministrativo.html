@@ -1502,10 +1502,12 @@
     // Produtos
     let modoEdicao = false;
     let idEdicao = null;
+    let produtosLocais = [];
 
     async function carregarProdutos() {
       try {
         const produtos = await apiCall('/bolos/admin', 'GET', null, true);
+        produtosLocais = produtos;
         
         $('#tabela-produtos').html(produtos.map(p => {
           const inativo = p.ativo === false;
@@ -1562,14 +1564,31 @@
     }
 
     async function excluirProduto(id) {
-      const result = await Swal.fire({
-        title: 'Confirmar exclusão?',
-        text: 'Esta ação não pode ser desfeita!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sim, excluir',
-        cancelButtonText: 'Cancelar'
-      });
+      const produto = produtosLocais.find(p => p.id === id);
+      const possuiPedidos = produto ? produto.possui_pedidos : false;
+
+      let configAlerta;
+      if (possuiPedidos) {
+        configAlerta = {
+          title: 'Confirmar desativação?',
+          text: 'Este produto possui pedidos vinculados e será desativado (ficará invisível para os clientes, mas mantido no histórico).',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sim, desativar',
+          cancelButtonText: 'Cancelar'
+        };
+      } else {
+        configAlerta = {
+          title: 'Confirmar exclusão?',
+          text: 'Esta ação não pode ser desfeita!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sim, excluir',
+          cancelButtonText: 'Cancelar'
+        };
+      }
+
+      const result = await Swal.fire(configAlerta);
 
       if (!result.isConfirmed) return;
 
