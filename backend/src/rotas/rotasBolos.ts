@@ -41,6 +41,7 @@ const rotas = Router();
  *                     example: 10
  */
 rotas.get('/', controladorBolo.listar);
+rotas.get('/admin', autenticacao, autorizacao(['admin']), controladorBolo.listarAdmin);
 
 /**
  * @swagger
@@ -175,5 +176,6 @@ rotas.put('/:id', autenticacao, autorizacao(['admin']), controladorBolo.atualiza
  *         description: Sem permissao (requer admin)
  */
 rotas.delete('/:id', autenticacao, autorizacao(['admin']), controladorBolo.deletar);
+rotas.patch('/:id/reativar', autenticacao, autorizacao(['admin']), controladorBolo.reativar);
 
 export default rotas;

@@ -1505,18 +1505,23 @@
 
     async function carregarProdutos() {
       try {
-        const produtos = await apiCall('/bolos', 'GET');
+        const produtos = await apiCall('/bolos/admin', 'GET', null, true);
         
         $('#tabela-produtos').html(produtos.map(p => {
+          const inativo = p.ativo === false;
+          const badgeInativo = inativo
+            ? `<span style="background:#e53935;color:#fff;font-size:0.7rem;padding:2px 8px;border-radius:99px;margin-left:6px;vertical-align:middle;">Inativo</span>`
+            : '';
+          const botoesAcao = inativo
+            ? `<button class="btn-acao" style="background:#2e7d32;color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:0.85rem;" onclick="reativarProduto('${p.id}')">✅ Reativar</button>`
+            : `<button class="btn-acao btn-editar" onclick="editarProduto('${p.id}')">✏️</button>
+               <button class="btn-acao btn-excluir" onclick="excluirProduto('${p.id}')">🗑️</button>`;
           return `
-            <tr>
-              <td><img src="${p.imagem_url}" alt="${p.nome}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;"></td>
-              <td>${p.nome}</td>
+            <tr style="opacity: ${inativo ? '0.6' : '1'}">
+              <td><img src="${p.imagem_url}" alt="${p.nome}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; ${inativo ? 'filter:grayscale(1)' : ''}"></td>
+              <td>${p.nome}${badgeInativo}</td>
               <td>R$ ${p.preco.toFixed(2).replace('.', ',')}</td>
-              <td class="acoes">
-                <button class="btn-acao btn-editar" onclick="editarProduto('${p.id}')">✏️</button>
-                <button class="btn-acao btn-excluir" onclick="excluirProduto('${p.id}')">🗑️</button>
-              </td>
+              <td class="acoes">${botoesAcao}</td>
             </tr>
           `;
         }).join(''));
@@ -1569,11 +1574,29 @@
       if (!result.isConfirmed) return;
 
       try {
-        await apiCall(`/bolos/${id}`, 'DELETE', null, true);
-        Swal.fire('Sucesso', 'Produto excluído!', 'success');
+        const resposta = await apiCall(`/bolos/${id}`, 'DELETE', null, true);
+        if (resposta && resposta.softDelete) {
+          Swal.fire({
+            title: 'Produto desativado',
+            text: 'O produto possui pedidos vinculados e foi ocultado da loja. Você pode reativá-lo quando quiser.',
+            icon: 'info'
+          });
+        } else {
+          Swal.fire('Sucesso', 'Produto excluído!', 'success');
+        }
         carregarProdutos();
       } catch (error) {
         Swal.fire('Não foi possível excluir', error.message || 'Erro ao excluir produto', 'error');
+      }
+    }
+
+    async function reativarProduto(id) {
+      try {
+        await apiCall(`/bolos/${id}/reativar`, 'PATCH', null, true);
+        Swal.fire('Produto reativado!', 'O produto já está visível na loja novamente.', 'success');
+        carregarProdutos();
+      } catch (error) {
+        Swal.fire('Erro', error.message || 'Erro ao reativar produto', 'error');
       }
     }
 

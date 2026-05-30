@@ -3,10 +3,17 @@ import { servicoBolo } from '../servicos/servicoBolo';
 import { DadosNovoBolo, DadosAtualizarBolo } from '../tipos/Bolo';
 
 export const controladorBolo = {
-  // GET /bolos - Lista todos os bolos
+  // GET /bolos - Lista apenas bolos ativos (loja pública)
   async listar(req: Request, res: Response) {
     const bolos = await servicoBolo.listarTodos();
-    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(200).json(bolos);
+  },
+
+  // GET /bolos/admin - Lista TODOS os bolos incluindo inativos (painel admin)
+  async listarAdmin(req: Request, res: Response) {
+    const bolos = await servicoBolo.listarTodosAdmin();
+    res.setHeader('Cache-Control', 'no-store');
     res.status(200).json(bolos);
   },
 
@@ -37,7 +44,7 @@ export const controladorBolo = {
     }
 
     const novoBolo = await servicoBolo.criar(dados);
-    
+
     if (!novoBolo) {
       return res.status(500).json({ mensagem: 'Erro ao criar bolo' });
     }
@@ -59,20 +66,34 @@ export const controladorBolo = {
     res.status(200).json(boloAtualizado);
   },
 
-  // DELETE /bolos/:id - Deleta um bolo
+  // DELETE /bolos/:id - Deleta fisicamente (sem pedidos) ou desativa via soft delete (com pedidos)
   async deletar(req: Request, res: Response) {
     const { id } = req.params;
     const resultado = await servicoBolo.deletar(id);
 
     if (!resultado.sucesso) {
-      if (resultado.motivo === 'pedidos') {
-        return res.status(409).json({
-          mensagem: 'Não é possível excluir este produto pois ele possui pedidos vinculados.',
-        });
-      }
       return res.status(500).json({ mensagem: 'Erro interno ao excluir produto.' });
     }
 
-    res.status(200).json({ mensagem: 'Bolo deletado com sucesso' });
+    if (resultado.softDelete) {
+      return res.status(200).json({
+        mensagem: 'Produto desativado. Ele possui pedidos vinculados e foi ocultado da loja, mas pode ser reativado.',
+        softDelete: true,
+      });
+    }
+
+    res.status(200).json({ mensagem: 'Produto excluído com sucesso.', softDelete: false });
+  },
+
+  // PATCH /bolos/:id/reativar - Reativa um bolo desativado
+  async reativar(req: Request, res: Response) {
+    const { id } = req.params;
+    const sucesso = await servicoBolo.reativar(id);
+
+    if (!sucesso) {
+      return res.status(500).json({ mensagem: 'Erro ao reativar produto.' });
+    }
+
+    res.status(200).json({ mensagem: 'Produto reativado com sucesso!' });
   },
 };

@@ -7,6 +7,7 @@ export interface Bolo {
   imagem_url: string;
   estoque: number;
   sob_encomenda: boolean;
+  ativo: boolean;
 }
 
 // Dados para cadastrar bolo novo
@@ -27,4 +28,5 @@ export interface DadosAtualizarBolo {
   imagem_url?: string;
   estoque?: number;
   sob_encomenda?: boolean;
+  ativo?: boolean;
 }
