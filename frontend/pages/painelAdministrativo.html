@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <!-- A&L Cakes - Painel Administrativo -->
 <html lang="pt-BR">
 <head>
@@ -1573,7 +1573,7 @@
         Swal.fire('Sucesso', 'Produto excluído!', 'success');
         carregarProdutos();
       } catch (error) {
-        Swal.fire('Erro', 'Erro ao excluir produto', 'error');
+        Swal.fire('Não foi possível excluir', error.message || 'Erro ao excluir produto', 'error');
       }
     }
 
