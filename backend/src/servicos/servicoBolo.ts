@@ -31,7 +31,19 @@ export const servicoBolo = {
       return [];
     }
 
-    return data || [];
+    // Busca os ids dos bolos que já possuem pedidos vinculados
+    const { data: itensPedido } = await supabase
+      .from('pedido_itens')
+      .select('bolo_id');
+
+    const idsComPedidos = new Set(itensPedido?.map(item => item.bolo_id) || []);
+
+    const bolosComInfo = (data || []).map(bolo => ({
+      ...bolo,
+      possui_pedidos: idsComPedidos.has(bolo.id)
+    }));
+
+    return bolosComInfo;
   },
 
   // Busca um bolo pelo ID no Supabase

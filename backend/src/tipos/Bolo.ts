@@ -8,6 +8,7 @@ export interface Bolo {
   estoque: number;
   sob_encomenda: boolean;
   ativo: boolean;
+  possui_pedidos?: boolean;
 }
 
 // Dados para cadastrar bolo novo
