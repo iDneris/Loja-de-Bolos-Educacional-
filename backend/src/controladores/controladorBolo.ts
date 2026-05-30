@@ -62,10 +62,15 @@ export const controladorBolo = {
   // DELETE /bolos/:id - Deleta um bolo
   async deletar(req: Request, res: Response) {
     const { id } = req.params;
-    const deletado = await servicoBolo.deletar(id);
+    const resultado = await servicoBolo.deletar(id);
 
-    if (!deletado) {
-      return res.status(404).json({ mensagem: 'Bolo não encontrado' });
+    if (!resultado.sucesso) {
+      if (resultado.motivo === 'pedidos') {
+        return res.status(409).json({
+          mensagem: 'Não é possível excluir este produto pois ele possui pedidos vinculados.',
+        });
+      }
+      return res.status(500).json({ mensagem: 'Erro interno ao excluir produto.' });
     }
 
     res.status(200).json({ mensagem: 'Bolo deletado com sucesso' });

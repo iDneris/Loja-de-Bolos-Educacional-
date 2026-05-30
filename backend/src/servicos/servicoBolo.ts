@@ -67,7 +67,24 @@ export const servicoBolo = {
   },
 
   // Deleta um bolo do Supabase
-  async deletar(id: string): Promise<boolean> {
+  // Retorna: { sucesso: true } | { sucesso: false, motivo: 'pedidos' | 'erro' }
+  async deletar(id: string): Promise<{ sucesso: boolean; motivo?: string }> {
+    // Passo 1: remove do carrinho (pode remover sem problema)
+    await supabase.from('carrinho_itens').delete().eq('bolo_id', id);
+
+    // Passo 2: verifica se o bolo tem pedidos vinculados
+    const { data: itensPedido } = await supabase
+      .from('pedido_itens')
+      .select('id')
+      .eq('bolo_id', id)
+      .limit(1);
+
+    if (itensPedido && itensPedido.length > 0) {
+      console.warn(`Bolo ${id} possui pedidos vinculados — exclusão bloqueada.`);
+      return { sucesso: false, motivo: 'pedidos' };
+    }
+
+    // Passo 3: deleta o bolo
     const { error } = await supabase
       .from('bolos')
       .delete()
@@ -75,10 +92,10 @@ export const servicoBolo = {
 
     if (error) {
       console.error('Erro ao deletar bolo:', error);
-      return false;
+      return { sucesso: false, motivo: 'erro' };
     }
 
-    return true;
+    return { sucesso: true };
   },
 
   // Reduz o estoque quando faz pedido (pula se sob_encomenda)
